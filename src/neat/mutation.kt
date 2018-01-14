@@ -1,46 +1,49 @@
 package neat
 
+import java.util.*
+
 interface MutationInterface {
     fun mutate(g: Graph) : Graph
 }
 
-class NodeMutation: MutationInterface {
-    override fun mutate(g: Graph) : Graph {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-    /*override fun mutate(g: Graph) {
+class AddNodeMutation : MutationInterface {
+
+    override fun mutate(graph: Graph) : Graph {
         val r = Random()
 
-        var from: Node? = null
-        if(Random().nextDouble() >= g.nodes.size / (g.nodes.size + g.input_nodes.size)){
-            from = g.nodes[r.nextInt(g.nodes.size)]
+        var from = graph.nodes[r.nextInt(graph.nodes.size)]
+        val to: Node?
+        if(r.nextDouble() < graph.output.size / (graph.output.size + graph.hidden.size)){
+            to = graph.output[r.nextInt(graph.output.size)]
         } else {
-            from = g.input_nodes[r.nextInt(g.input_nodes.size)]
+            to = graph.hidden[r.nextInt(graph.hidden.size)]
         }
 
-        val to = g.nodes[r.nextInt(g.nodes.size)]
+        val new = Node(Node.innovation, config.bias_init_mean, 1.0)
+        val hidden = graph.hidden.plus(new)
+        val connections: Map<Node, List<Connection>> = graph.connections
+            .mapValues {  if(it.key == to) { it.value.plus(Connection(Connection.innovation, 1.0, new)) } else { it.value } }
+            .plus(Pair(new, listOf(Connection(Connection.innovation, 1.0, from))))
 
-        g.addNode(from, to)
-    }*/
+        return Graph(graph.inputs, hidden, graph.output, connections)
+    }
 }
 
-class ConnectionMutation: MutationInterface {
-    override fun mutate(g: Graph) : Graph {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-    /*override fun mutate(g: Graph) : Graph {
-        val new = Graph()
+class AddConnectionMutation : MutationInterface {
+    override fun mutate(graph: Graph) : Graph {
         val r = Random()
 
-        var from: Node? = null
-        if(Random().nextDouble() >= g.nodes.size / (g.nodes.size + g.input_nodes.size)){
-            from = g.nodes[r.nextInt(g.nodes.size)]
+        var from = graph.nodes[r.nextInt(graph.nodes.size)]
+        val to: Node?
+        if(r.nextDouble() < graph.output.size / (graph.output.size + graph.hidden.size)){
+            to = graph.output[r.nextInt(graph.output.size)]
         } else {
-            from = g.input_nodes[r.nextInt(g.input_nodes.size)]
+            to = graph.hidden[r.nextInt(graph.hidden.size)]
         }
 
-        val to = g.nodes[r.nextInt(g.nodes.size)]
+        val connections: Map<Node, List<Connection>> = graph.connections
+                .plus(Pair(to, listOf(Connection(Connection.innovation, 1.0, from))))
 
-        g.addConnection(from, to)
-    }*/
+        return Graph(graph.inputs, graph.hidden, graph.output, connections)
+    }
 }

@@ -20,16 +20,26 @@ data class Node(
         return "Node(id=$id)"
     }
 
-
+    companion object {
+        var innovation = 0
+            private set
+            get () { return field++ }
+    }
 }
 
 data class Connection (
         val id: Int,
         var weight: Double,
         val pointsFrom: Node
-)
+) {
+    companion object {
+        var innovation = 0
+            private set
+            get () { return field++ }
+    }
+}
 
-class Graph(val inputs: List<Node>, val hidden: List<Node>, val output: List<Node>, val connections: HashMap<Node, List<Connection>>): Cloneable {
+class Graph(val inputs: List<Node>, val hidden: List<Node>, val output: List<Node>, val connections: Map<Node, List<Connection>>): Cloneable {
 
     val nodes = inputs.plus(hidden).plus(output)
 
@@ -45,7 +55,6 @@ class Graph(val inputs: List<Node>, val hidden: List<Node>, val output: List<Nod
         for (n in inputs){
             values[n] = input_values[n.id + inputs.size]
         }
-        println(values.toString())
 
         while(time_seconds < final_time) {
             val dt = min(time_step, final_time - time_seconds)

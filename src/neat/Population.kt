@@ -8,34 +8,39 @@ class Population(inputs: Int, outputs: Int, size: Int, val eval: (g: Graph) -> D
     var population = Array(size, { Graph(inputs, outputs) })
 
     fun evolve(){
-
-    }
-
-    fun crossover(pop: List<Graph>){
-        pop.sortedBy { this.eval(it) }
+        population.sortBy { this.eval(it) }
         var i = 0
-        val newPop = mutableListOf<Graph>()
+        val newPop = Array<Graph?>(population.size, { null })
 
         while(i < config.elitism){
-            newPop[i] = pop[i]
+            newPop[i] = population[i]
             i++
         }
 
-        while (i < pop.size){
-            newPop[i] = crossover(
-                pop[r.nextInt(pop.size)],
-                pop[r.nextInt(pop.size)]
-            )
+        while (i < population.size){
+            if(r.nextDouble() > 0.5) {
+                newPop[i] = crossover(
+                        population[r.nextInt(population.size)],
+                        population[r.nextInt(population.size)]
+                )
+            } else {
+                newPop[i] = population[r.nextInt(population.size)]
+            }
+
+            newPop[i] = mutate(newPop[i]!!)
+            i++
         }
+    }
 
-
+    fun crossover(g1: Graph, g2: Graph): Graph {
+        return g1
     }
 
     fun mutate(p: Graph) : Graph {
         if(r.nextDouble() > config.conn_add_prob) {
-            return ConnectionMutation().mutate(p)
+            return AddConnectionMutation().mutate(p)
         } else if(r.nextDouble() > config.node_add_prob) {
-            return NodeMutation().mutate(p)
+            return AddNodeMutation().mutate(p)
         }
 
         return p
