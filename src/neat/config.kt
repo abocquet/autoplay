@@ -39,7 +39,6 @@ object config {
     val enabled_default         = true
     val enabled_mutate_rate     = 0.01
 
-    val feed_forward            = true
     val initial_connection      = "full"
 
     // node add/remove rates

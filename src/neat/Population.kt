@@ -2,15 +2,17 @@ package neat
 
 import java.util.*
 
-class Population(inputs: Int, outputs: Int, size: Int, val eval: (g: Graph) -> Double) {
+class Population(inputs: Int, outputs: Int, val eval: (g: Genome) -> Double) {
 
     val r = Random()
-    var population = Array(size, { Graph(inputs, outputs) })
+    var population = Array(config.pop_size, { Genome(inputs, outputs) })
+    var generation = 0
+    var species = mutableMapOf<Genome, MutableList<Genome>>()
 
     fun evolve(){
         population.sortBy { this.eval(it) }
         var i = 0
-        val newPop = Array<Graph?>(population.size, { null })
+        val newPop = Array<Genome?>(population.size, { null })
 
         while(i < config.elitism){
             newPop[i] = population[i]
@@ -30,13 +32,16 @@ class Population(inputs: Int, outputs: Int, size: Int, val eval: (g: Graph) -> D
             newPop[i] = mutate(newPop[i]!!)
             i++
         }
+
+        generation++
+        speciate()
     }
 
-    fun crossover(g1: Graph, g2: Graph): Graph {
+    fun crossover(g1: Genome, g2: Genome): Genome {
         return g1
     }
 
-    fun mutate(p: Graph) : Graph {
+    fun mutate(p: Genome) : Genome {
         if(r.nextDouble() > config.conn_add_prob) {
             return AddConnectionMutation().mutate(p)
         } else if(r.nextDouble() > config.node_add_prob) {
@@ -44,6 +49,23 @@ class Population(inputs: Int, outputs: Int, size: Int, val eval: (g: Graph) -> D
         }
 
         return p
+    }
+
+    fun speciate() {
+        val distance = GenomeDistanceCache()
+        species.forEach { t, u -> u.clear() }
+        population.forEach { g ->
+            for((k, l) in species){
+                if(distance(k, g) < config.compatibility_threshold){
+                    l.add(g)
+                    return
+                }
+            }
+
+            species[g] = mutableListOf(g)
+        }
+
+        species.filterValues { it.isNotEmpty() }
     }
 
 }
