@@ -18,37 +18,37 @@ fun main(args: Array<String>) {
     )
 
     val p1h = listOf(
-            Node(5, 1.0)
+            Node(1, 1.0)
     )
 
     val p2h = listOf(
-            Node(5, 1.0),
-            Node(6, 1.0)
+            Node(1, 1.0),
+            Node(2, 1.0)
     )
 
     val outputs = listOf(
-            Node(4, 1.0, NodeType.OUTPUT)
+            Node(0, 1.0, NodeType.OUTPUT)
     )
 
     val c1 = listOf(
-            Connection(1, 1.0, 1, 4, true),
-            Connection(2, 1.0, 2, 4, false),
-            Connection(3, 1.0, 3, 4, true),
-            Connection(4, 1.0, 2, 5, true),
-            Connection(5, 1.0, 5, 4, true),
-            Connection(8, 1.0, 1, 5, true)
+            Connection(1, 1.0, -1, 0, true),
+            Connection(2, 1.0, -2, 0, false),
+            Connection(3, 1.0, -3, 0, true),
+            Connection(4, 1.0, -2, 1, true),
+            Connection(5, 1.0, 1, 0, true),
+            Connection(8, 1.0, -1, 1, true)
     )
 
     val c2 = listOf(
-            Connection(1, 1.0, 1, 4, true),
-            Connection(2, 1.0, 2, 4, false),
-            Connection(3, 1.0, 3, 4, true),
-            Connection(4, 1.0, 2, 5, true),
-            Connection(5, 1.0, 5, 4, false),
-            Connection(6, 1.0, 5, 6, true),
-            Connection(7, 1.0, 6, 4, true),
-            Connection(9, 1.0, 3, 5, true),
-            Connection(10, 1.0, 1, 6, true)
+            Connection(1, 1.0, -1, 0, true),
+            Connection(2, 1.0, -2, 0, false),
+            Connection(3, 1.0, -3, 0, true),
+            Connection(4, 1.0, -2, 1, true),
+            Connection(5, 1.0, 1, 0, false),
+            Connection(6, 1.0, -1, 2, true),
+            Connection(7, 1.0, -2, 0, true),
+            Connection(9, 1.0, -3, 1, true),
+            Connection(10, 1.0,-1, 2, true)
     )
 
     val p1 = Genome(inputs, p1h, outputs, c1)

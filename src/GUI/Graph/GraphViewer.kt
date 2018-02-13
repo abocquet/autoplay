@@ -1,5 +1,6 @@
 package GUI.Graph
 
+import neat.stucture.Connection
 import neat.stucture.Genome
 import java.awt.Color
 import java.awt.Graphics
@@ -40,36 +41,39 @@ class GraphPanel(val g : Genome): JPanel() {
 
     init {
 
-        val nodesDistances : MutableMap<Int, Int> = mutableMapOf()
-        var nodesToExplore = mutableSetOf<Int>() // Contient les id des nodes a explorer
+        val distanceCache = mutableMapOf<Int, Int>()
+        val exploredConnections = mutableListOf<Connection>()
+        var connectionsToExplore = mutableSetOf<Connection>()
 
-        nodesToExplore.addAll(g.output.map { it.id })
-        var distance = 0
+        connectionsToExplore.addAll(g.connections.filter { it.to in g.output.map{ it.id } })
+        g.output.forEach { distanceCache[it.id] = 0 }
+        g.connections.filter { it.to in g.output.map{ it.id } }.forEach { distanceCache[it.from] = 1 }
 
-        while(nodesToExplore.isNotEmpty()){
-            println(nodesToExplore)
-            val newNodesToExplore = mutableSetOf<Int>()
+        while(connectionsToExplore.isNotEmpty()){
+            val newConnectionsToExplore = mutableSetOf<Connection>()
+            connectionsToExplore.forEach { c ->
+                exploredConnections.add(c)
 
-            nodesToExplore.forEach { nid ->
-                nodesDistances[nid] = distance
-                newNodesToExplore.addAll(g.connections
-                    .filter { it.to == nid }
-                    .map { c -> c.from }
-                    .filterNot { nodesToExplore.contains(it) || newNodesToExplore.contains(it) }
-                )
+                g.connections.filter { it.to == c.from }.forEach {
+                    distanceCache[it.from] = max(distanceCache[c.from]!! + 1, distanceCache[it.from] ?: 0)
+                    g.connections.filter { it2 -> it2.to == it.from}
+                }
             }
-
-            nodesToExplore = newNodesToExplore
-            distance++
+            connectionsToExplore = newConnectionsToExplore
         }
 
-        val countInColumn = Array(distance, { number -> nodesDistances.count { it.value == number } })
-        val counter = Array(distance, {1})
+        println(distanceCache)
 
-        organization = nodesDistances
+        val maxDistance = distanceCache.maxBy { it.value }!!.value
+        g.inputs.forEach { distanceCache[it.id] = maxDistance }
+
+        val countInColumn = Array(maxDistance + 1, { number -> distanceCache.count { it.value == number } })
+        val counter = Array(maxDistance + 1, {1})
+
+        organization = distanceCache
         .map { it.key to (
-            (distance-1).toDouble() - (nodesDistances[it.key]!!.toDouble() / (distance - 1)) to
-            counter[nodesDistances[it.key]!!]++.toDouble() / (countInColumn[nodesDistances[it.key]!!] + 1)
+            1 - (distanceCache[it.key]!!.toDouble() / maxDistance) to
+            counter[distanceCache[it.key]!!]++.toDouble() / (countInColumn[distanceCache[it.key]!!] + 1)
         ) }.toMap()
 
         println(organization)
