@@ -5,7 +5,7 @@ import java.lang.Double.max
 
 class GravityBehaviour: InertiaBehaviour() {
 
-    val gravity = 981.0
+    private val gravity = 981.0
 
     override fun update(obj: AbstractObject, delta_t: Double, obstacles: MutableList<AbstractObject>) {
 

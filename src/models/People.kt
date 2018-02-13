@@ -7,9 +7,9 @@ import java.awt.Dimension
 
 open class People(x: Double, y: Double, _dimension: Dimension, physicBehaviour: AbstractPhysicBehaviour, renderer: AbstractRenderer) : AbstractObject(physicBehaviour, renderer) {
 
-    val maxLife = 1
-    var life = maxLife
-    var isHurted = false
+    private val maxLife = 1
+    private var life = maxLife
+    private var isHurted = false
 
     var maxSpeed = Vector(5.0, 5.0)
     override var position = Vector(x, y)

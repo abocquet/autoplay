@@ -41,7 +41,7 @@ abstract class AbstractPhysicBehaviour : Cloneable {
      *
      * Calcul les degrès de liberté du solide par rapport à un bloc donné
      */
-    protected fun calcMargin(obj: AbstractObject, bloc: AbstractObject, next_pos: Vector) {
+    private fun calcMargin(obj: AbstractObject, bloc: AbstractObject, next_pos: Vector) {
 
         val th = obj.dimension.getHeight()
         val tw = obj.dimension.getWidth()

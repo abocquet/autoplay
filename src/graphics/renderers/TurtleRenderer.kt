@@ -1,4 +1,3 @@
 package graphics.renderers
 
-class TurtleRenderer : SquareRenderer() {
-}
+class TurtleRenderer : SquareRenderer()

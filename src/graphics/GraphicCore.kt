@@ -13,7 +13,7 @@ interface Drawable {
 
 class Panel(_drawers: MutableList<Drawable>) : JPanel() {
 
-    val drawers = _drawers
+    private val drawers = _drawers
     var scrolling = 0
 
     public override fun paintComponent(_g: Graphics) {
@@ -52,7 +52,7 @@ class GraphicCore(val level: Level): JFrame() {
         isVisible = true
         isResizable = false
         requestFocus()
-        setFocusTraversalKeysEnabled(false)
+        focusTraversalKeysEnabled = false
     }
 
     fun start() {

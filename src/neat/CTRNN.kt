@@ -1,27 +1,30 @@
 package neat
 
+import neat.stucture.Genome
+import neat.stucture.Node
+import neat.stucture.NodeType
+
 class GraphNode(
-    val node: Node,
-    val connections: MutableList<Pair<Double, GraphNode>>,
-    var value: Double = 0.0
+        val node: Node,
+        val connections: MutableList<Pair<Double, GraphNode>>,
+        var value: Double = 0.0
 )
 
-class CTRNN(val genome: Genome) {
+class CTRNN(private val genome: Genome) {
 
-    val nodes = genome.nodes.map { GraphNode(it, mutableListOf()) }
+    private val nodes = genome.nodes.map { GraphNode(it, mutableListOf()) }
 
     init {
 
         nodes.forEach { it.connections.addAll(
             genome.connections
-                .filter { c -> c.to == it.node.id }
+                .filter { c -> c.to == it.node.id && c.enabled }
                 .map {
                     c -> Pair(c.weight, nodes.filter { it.node.id == c.from }[0])
                 }
         ) }
 
     }
-
 
     fun eval(input_values: Array<Double>, final_time: Double, time_step: Double) : Array<Double> {
         /* Advance the simulation by the given amount of time, assuming that input_nodes are
@@ -39,11 +42,6 @@ class CTRNN(val genome: Genome) {
             .filter { it.node.type == NodeType.BIAS }
             .forEach { it.value = 1.0 }
 
-        for(node in nodes) {
-            if (node.node.id < 0) { continue }
-            node.connections.forEach { println(it.second.node) }
-        }
-
         while (time_seconds < final_time) {
             val dt = java.lang.Double.min(time_step, final_time - time_seconds)
 
@@ -56,7 +54,7 @@ class CTRNN(val genome: Genome) {
                 node.value =
                         node.value +
                         dt / node.node.timeConstant * (
-                        -node.value + node.node.activation(node.connections.map { it.first * it.second.value }.sum())
+                        -node.value + node.node.activation(node.connections.filter { it.second.node.enabled }.map { it.first * it.second.value }.sum())
                         )
 
                 time_seconds += dt

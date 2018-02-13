@@ -1,71 +1,105 @@
 package neat
 
+import neat.mutation.*
+import neat.stucture.Genome
 import java.util.*
 
-class Population(inputs: Int, outputs: Int, val eval: (g: Genome) -> Double) {
+class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double) {
 
-    val r = Random()
-    var population = Array(config.pop_size, { Genome(inputs, outputs) })
-    var generation = 0
-    var species = mutableMapOf<Genome, MutableList<Genome>>()
+    private val r = Random()
+    internal var population = Array(Config.pop_size, { Genome(inputs, outputs) })
+    private var generation = 0
+    private var species = mutableListOf<Species>()
 
-    fun evolve(){
-        population.sortBy { this.eval(it) }
-        var i = 0
+    val results : String
+        get() {
+            val cache = FitnessCache(eval)
+            population.sortBy(cache::fitness)
+            population.reverse()
+            val best = population[0]
+            return "$best has a score of ${cache.fitness(best)}"
+        }
+
+    fun evolve(n: Int){ (0 until n).forEach { evolve() } }
+
+    private fun evolve(){
+        generation++
+        val cache = FitnessCache(eval)
+
+        population.sortBy { cache.fitness(it) }
         val newPop = Array<Genome?>(population.size, { null })
 
-        while(i < config.elitism){
+        for(i in 0 until Config.elitism){
             newPop[i] = population[i]
-            i++
         }
 
-        while (i < population.size){
-            if(r.nextDouble() > 0.5) {
-                newPop[i] = crossover(
-                        population[r.nextInt(population.size)],
-                        population[r.nextInt(population.size)]
-                )
-            } else {
-                newPop[i] = population[r.nextInt(population.size)]
-            }
-
-            newPop[i] = mutate(newPop[i]!!)
-            i++
-        }
-
-        generation++
+        val crossover = Crossover()
         speciate()
-    }
 
-    fun crossover(g1: Genome, g2: Genome): Genome {
-        return g1
-    }
+        println("number of species : ${species.size}")
+        println("popsize: ${population.size}")
+        species.forEach { print("${it.members.size} ") }
+        println()
 
-    fun mutate(p: Genome) : Genome {
-        if(r.nextDouble() > config.conn_add_prob) {
-            return AddConnectionMutation().mutate(p)
-        } else if(r.nextDouble() > config.node_add_prob) {
-            return AddNodeMutation().mutate(p)
+        val total = species.map(cache::fitness).sum()
+        val offspring = species.fold(listOf<Genome>()) { children, s ->
+            val n = ((cache.fitness(s) / total) * population.size).toInt()
+            val r = Random()
+            val size = s.members.size
+
+            val p1 = s.members[r.nextInt(size)]
+            val p2 = s.members[r.nextInt(size)]
+
+            children.plus(List(n, {
+                if(cache.fitness(p1) > cache.fitness(p2)) crossover(p1, p2) else crossover(p2, p1)
+            }))
+        }
+        .map(this::mutate)
+        .sortedBy(cache::fitness)
+
+        val it = offspring.iterator()
+        for(i in Config.elitism until population.size){
+            population[i] = it.next()
         }
 
-        return p
+        population.forEach { print("${cache.fitness(it)} ") }
+        println()
     }
 
-    fun speciate() {
+    private fun mutate(p: Genome) : Genome {
+        return when {
+            r.nextDouble() > Config.conn_add_prob -> AddConnectionMutation()(p)
+            r.nextDouble() > Config.bias_replace_rate -> ChangeBiasMutation()(p)
+            r.nextDouble() > Config.node_delete_prob -> DisableNodeMutation()(p)
+            r.nextDouble() > Config.conn_delete_prob -> RemoveConnectionMutation()(p)
+            r.nextDouble() > Config.node_add_prob -> AddNodeMutation()(p)
+            else -> p
+        }
+    }
+
+    private fun speciate() {
+
         val distance = GenomeDistanceCache()
-        species.forEach { t, u -> u.clear() }
+        species.forEach { it.members.clear() }
+        population
         population.forEach { g ->
-            for((k, l) in species){
-                if(distance(k, g) < config.compatibility_threshold){
-                    l.add(g)
-                    return
+
+            var flag = false
+            for(s in species){
+                if(distance(s.representative, g) < Config.compatibility_threshold){
+                    s.members.add(g)
+                    flag = true
+                    break
                 }
             }
 
-            species[g] = mutableListOf(g)
+            if(!flag) {
+                species.add(Species(g, generation))
+            }
         }
 
-        species.filterValues { it.isNotEmpty() }
+        species.removeAll { it.members.size == 0 }
+        species.forEach { assert(it.members.size > 0) }
     }
 
 }

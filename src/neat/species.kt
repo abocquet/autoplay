@@ -1,26 +1,20 @@
 package neat
 
+import neat.stucture.Genome
+import neat.stucture.NodeType
 import java.lang.Integer.max
 import kotlin.math.abs
 
-class Species(val key: Int, generation: Int) {
+class Species(val representative: Genome, generation: Int) {
     val created = generation
     val last_improved = generation
-    var representative: Genome? = null
-    var members = emptyList<Genome>()
-    val fitness = null
-    val adjusted_fitness = null
+    var members = mutableListOf<Genome>()
     val fitness_history = mutableListOf<Int>()
-
-    fun update(representative: Genome, members: List<Genome>){
-        this.representative = representative
-        this.members = members
-    }
 }
 
 class GenomeDistanceCache {
 
-    val distances = mutableMapOf<Pair<Genome, Genome>, Double>()
+    private val distances = mutableMapOf<Pair<Genome, Genome>, Double>()
 
     operator fun invoke(g1: Genome, g2: Genome) : Double {
         var distance = distances[Pair(g1, g2)]
@@ -37,11 +31,14 @@ class GenomeDistanceCache {
                     disjointNodes++
                 } else {
                     val n1 = search[0]
-                    nodeDistance += abs(
-                            g2.connections.filter { it.to == n2.id && g2.nodes.firstOrNull { n -> n.type == NodeType.BIAS }?.id == it.from }[0].weight -
-                            g1.connections.filter { it.to == n1.id && g1.nodes.firstOrNull { n -> n.type == NodeType.BIAS }?.id == it.from }[0].weight
-                    )
 
+                    val c1 = g1.connections.filter { it.to == n1.id && g1.nodes.firstOrNull { n -> n.type == NodeType.BIAS }?.id == it.from }
+                    val v1 : Double = if(c1.isEmpty()){ 0.0 } else { c1[0].weight }
+
+                    val c2 = g2.connections.filter { it.to == n2.id && g2.nodes.firstOrNull { n -> n.type == NodeType.BIAS }?.id == it.from }
+                    val v2 : Double = if(c2.isEmpty()) { 0.0 } else { c2[0].weight }
+
+                    nodeDistance += abs(v1 - v2)
                     if(n1.activation != n2.activation){
                         nodeDistance += 1
                     }
@@ -49,7 +46,7 @@ class GenomeDistanceCache {
             }
 
             val maxNodes = max(g1.nodes.size, g2.nodes.size)
-            nodeDistance = (nodeDistance * config.compatibility_weight_coefficient + (config.compatibility_disjoint_coefficient * disjointNodes)) / maxNodes
+            nodeDistance = (nodeDistance * Config.compatibility_weight_coefficient + (Config.compatibility_disjoint_coefficient * disjointNodes)) / maxNodes
 
             //Compute connection gene difference
             var connectionDistance = 0.0
@@ -72,7 +69,7 @@ class GenomeDistanceCache {
             }
 
             val maxConn = max(g1.connections.size, g2.connections.size)
-            connectionDistance = (connectionDistance + (config.compatibility_disjoint_coefficient * disjointConnections)) / maxConn
+            connectionDistance = (connectionDistance + (Config.compatibility_disjoint_coefficient * disjointConnections)) / maxConn
 
             distance = nodeDistance + connectionDistance
         }

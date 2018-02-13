@@ -5,7 +5,7 @@ import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 
 
-class DrawRequest(val g: Graphics2D, val width: Int, val height: Int) {
+class DrawRequest(private val g: Graphics2D, private val width: Int, private val height: Int) {
 
 
     init {
@@ -52,8 +52,8 @@ class DrawRequest(val g: Graphics2D, val width: Int, val height: Int) {
 
         // on ajoute un décalage sur x et y en fonction de l'angle de rotation
         // afin d'obtenir une rotation par raport au coins inférieur gauche
-        var y = this.height - _y - img.height * Math.cos(Math.toRadians(angle.toDouble()))
-        var x = _x - img.height * Math.sin(Math.toRadians(angle.toDouble()))
+        val y = this.height - _y - img.height * Math.cos(Math.toRadians(angle.toDouble()))
+        val x = _x - img.height * Math.sin(Math.toRadians(angle.toDouble()))
 
         val trans = AffineTransform()
         trans.translate(x.toDouble(), y.toDouble())

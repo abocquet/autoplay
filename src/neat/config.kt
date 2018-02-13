@@ -1,82 +1,83 @@
 package neat
 
-object config {
+object Config {
     //[NEAT]
-    val fitness_criterion     = "max"
-    val fitness_threshold     = 3.9
-    val pop_size              = 150
-    val reset_on_extinction   = false
+    const val fitness_criterion     = "max"
+    const val fitness_threshold     = 3.9
+    const val pop_size              = 10
+    //const val pop_size              = 100
+    const val reset_on_extinction   = false
 
     //[DefaultGenome]
     // node activation options
-    val activation_default      = "sigmoid"
-    val activation_mutate_rate  = 0.0
-    val activation_options      = "sigmoid"
+    const val activation_default      = "sigmoid"
+    const val activation_mutate_rate  = 0.0
+    const val activation_options      = "sigmoid"
 
     // node aggregation options
-    val aggregation_default     = "sum"
-    val aggregation_mutate_rate = 0.0
-    val aggregation_options     = "sum"
+    const val aggregation_default     = "sum"
+    const val aggregation_mutate_rate = 0.0
+    const val aggregation_options     = "sum"
 
     // node bias options
-    val bias_init_mean          = 0.0
-    val bias_init_stdev         = 1.0
-    val bias_max_value          = 30.0
-    val bias_min_value          = -30.0
-    val bias_mutate_power       = 0.5
-    val bias_mutate_rate        = 0.7
-    val bias_replace_rate       = 0.1
+    const val bias_init_mean          = 0.0
+    const val bias_init_stdev         = 1.0
+    const val bias_max_value          = 30.0
+    const val bias_min_value          = -30.0
+    const val bias_mutate_power       = 0.5
+    const val bias_mutate_rate        = 0.7
+    const val bias_replace_rate       = 0.1
 
     // genome compatibility options
-    val compatibility_disjoint_coefficient = 1.0
-    val compatibility_weight_coefficient   = 0.5
+    const val compatibility_disjoint_coefficient = 1.0
+    const val compatibility_weight_coefficient   = 0.5
 
     // connection add/remove rates
-    val conn_add_prob           = 0.5
-    val conn_delete_prob        = 0.5
+    const val conn_add_prob           = 0.5
+    const val conn_delete_prob        = 0.5
 
     // connection enable options
-    val enabled_default         = true
-    val enabled_mutate_rate     = 0.01
+    const val enabled_default         = true
+    const val enabled_mutate_rate     = 0.01
 
-    val initial_connection      = "full"
+    const val initial_connection      = "full"
 
     // node add/remove rates
-    val node_add_prob           = 0.2
-    val node_delete_prob        = 0.2
+    const val node_add_prob           = 0.2
+    const val node_delete_prob        = 0.2
 
     // network parameters
-    val num_hidden              = 0
-    val num_inputs              = 2
-    val num_outputs             = 1
+    const val num_hidden              = 0
+    const val num_inputs              = 2
+    const val num_outputs             = 1
 
     // node response options
-    val response_init_mean      = 1.0
-    val response_init_stdev     = 0.0
-    val response_max_value      = 30.0
-    val response_min_value      = -30.0
-    val response_mutate_power   = 0.0
-    val response_mutate_rate    = 0.0
-    val response_replace_rate   = 0.0
+    const val response_init_mean      = 1.0
+    const val response_init_stdev     = 0.0
+    const val response_max_value      = 30.0
+    const val response_min_value      = -30.0
+    const val response_mutate_power   = 0.0
+    const val response_mutate_rate    = 0.0
+    const val response_replace_rate   = 0.0
 
     // connection weight options
-    val weight_init_mean        = 0.0
-    val weight_init_stdev       = 1.0
-    val weight_max_value        = 30
-    val weight_min_value        = -30
-    val weight_mutate_power     = 0.5
-    val weight_mutate_rate      = 0.8
-    val weight_replace_rate     = 0.1
+    const val weight_init_mean        = 0.0
+    const val weight_init_stdev       = 1.0
+    const val weight_max_value        = 30.0
+    const val weight_min_value        = -30.0
+    const val weight_mutate_power     = 0.5
+    const val weight_mutate_rate      = 0.8
+    const val weight_replace_rate     = 0.1
 
     //[DefaultSpeciesSet]
-    val compatibility_threshold = 3.0
+    const val compatibility_threshold = 3.0
 
     //[DefaultStagnation]
-    val species_fitness_func = "max"
-    val max_stagnation       = 20
-    val species_elitism      = 2
+    const val species_fitness_func = "max"
+    const val max_stagnation       = 20
+    const val species_elitism      = 2
 
     //[DefaultReproduction]
-    val elitism            = 2
-    val survival_threshold = 0.2
+    const val elitism            = 2
+    const val survival_threshold = 0.2
 }

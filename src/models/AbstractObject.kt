@@ -14,7 +14,7 @@ open class AbstractObject(_physicBehaviour: AbstractPhysicBehaviour, _renderer: 
     val dimension = Dimension(30, 30)
 
     val physicBehaviour = _physicBehaviour
-    val renderer = _renderer
+    private val renderer = _renderer
 
     override fun render(dr: DrawRequest, offset: Int){
         renderer.draw(this, dr, offset)

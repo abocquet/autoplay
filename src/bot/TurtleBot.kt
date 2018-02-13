@@ -5,7 +5,7 @@ import graphics.renderers.TurtleRenderer
 import physics.behaviours.InertiaBehaviour
 import java.awt.Dimension
 
-class TurtleBot(val x: Double, val y: Double, val space: Double) : AbstractBot(x, y, Dimension(30, 30), InertiaBehaviour(), TurtleRenderer()){
+class TurtleBot(val x: Double, val y: Double, private val space: Double) : AbstractBot(x, y, Dimension(30, 30), InertiaBehaviour(), TurtleRenderer()){
 
     init {
         maxSpeed.x = 50.0
