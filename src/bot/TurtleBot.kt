@@ -1,11 +1,11 @@
 package bot
 
-import level.Level
 import graphics.renderers.TurtleRenderer
+import level.Level
 import physics.behaviours.InertiaBehaviour
 import java.awt.Dimension
 
-class TurtleBot(val x: Double, val y: Double, private val space: Double) : AbstractBot(x, y, Dimension(30, 30), InertiaBehaviour(), TurtleRenderer()){
+class TurtleBot(val x: Double, val y: Double, private val space: Double) : AbstractBot(x, y, Dimension(15, 25) * 2, InertiaBehaviour(), TurtleRenderer()){
 
     init {
         maxSpeed.x = 50.0
@@ -22,3 +22,5 @@ class TurtleBot(val x: Double, val y: Double, private val space: Double) : Abstr
     }
 
 }
+
+private operator fun Dimension.times(i: Int): Dimension { return Dimension(this.width * i, this.height * i)}

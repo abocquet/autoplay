@@ -7,15 +7,16 @@ import java.awt.Dimension
 
 open class People(x: Double, y: Double, _dimension: Dimension, physicBehaviour: AbstractPhysicBehaviour, renderer: AbstractRenderer) : AbstractObject(physicBehaviour, renderer) {
 
-    private val maxLife = 1
-    private var life = maxLife
-    private var isHurted = false
+    val maxLife = 2
+    var life = maxLife
+        get
+    var isHurted = false
 
     var maxSpeed = Vector(5.0, 5.0)
-    override var position = Vector(x, y)
 
     init {
-        this.dimension.size = _dimension
+        dimension.size = _dimension
+        position = Vector(x, y)
     }
 
     /**

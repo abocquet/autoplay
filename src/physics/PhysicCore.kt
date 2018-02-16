@@ -13,6 +13,7 @@ class PhysicCore(val level: Level) {
 
     val framerate = 50
     val delta_t = 1000 / framerate // Le temps écoulé entre deux cycles (en ms)
+    val listeners = mutableListOf<() -> Unit>()
 
     private var t: Thread? = null
 
@@ -41,6 +42,8 @@ class PhysicCore(val level: Level) {
                         p.update(1.0 / framerate.toDouble(), level.objects)
                     }
                 }
+
+                listeners.forEach { it() }
 
                 try {
                     Thread.sleep(delta_t.toLong())

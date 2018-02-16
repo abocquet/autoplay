@@ -11,21 +11,21 @@ interface Drawable {
     fun render(r: DrawRequest, offset: Int)
 }
 
-class Panel(_drawers: MutableList<Drawable>) : JPanel() {
+class Panel(val drawers: MutableList<Drawable>, val level: Level) : JPanel() {
 
-    private val drawers = _drawers
     var scrolling = 0
 
     public override fun paintComponent(_g: Graphics) {
         val g = _g as Graphics2D
 
         // On dessine l'arrière plan
-        g.color = Color.white
+        g.color = Color.getHSBColor(0.5699F, 0.372F, 0.9804F)
         g.fillRect(0, 0, this.width, this.height)
         g.color = Color.BLACK
 
         val dr = DrawRequest(g, this.width, this.height)
-        this.drawers.forEach { d -> d.render(dr, scrolling)}
+        drawers.toList().forEach { d -> d.render(dr, scrolling)}
+        level.objects.toList().forEach { d -> d.render(dr, scrolling) }
 
         //On libère les ressources système manuellement
         //http://docs.oracle.com/javase/7/docs/api/java/awt/Graphics.html#dispose()
@@ -35,17 +35,18 @@ class Panel(_drawers: MutableList<Drawable>) : JPanel() {
 }
 
 
-class GraphicCore(val level: Level): JFrame() {
+class GraphicCore(val level: Level, width: Int, height: Int): JFrame() {
 
     var FRAMERATE = 60
 
     val drawables = mutableListOf<Drawable>()
-    private val pan = Panel(drawables)
+    private val pan = Panel(drawables, level)
     private var t: Thread? = null
+    val listeners = mutableListOf<() -> Unit>()
 
     init {
         title = "AutoPlay"
-        setSize(1080, 720)
+        setSize(width, height)
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         setLocationRelativeTo(null)
         contentPane = pan
@@ -76,13 +77,15 @@ class GraphicCore(val level: Level): JFrame() {
                 val x = level.hero.position.x
                 val scrolling = pan.scrolling
 
-                if(x - scrolling < 200){
+                if(x - scrolling <  200){
                     pan.scrolling = (x - 200).toInt()
                 }
 
-                if(x > scrolling + 500){
+                if(x> scrolling + 500){
                     pan.scrolling = (x - 500).toInt()
                 }
+
+                listeners.forEach { it() }
 
                 pan.repaint()
                 try {
@@ -97,3 +100,4 @@ class GraphicCore(val level: Level): JFrame() {
     }
 
 }
+

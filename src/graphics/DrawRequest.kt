@@ -33,7 +33,7 @@ class DrawRequest(private val g: Graphics2D, private val width: Int, private val
         this.g.translate(-x, -y)
     }
 
-    fun image(img: BufferedImage, _x: Int, _y: Int, width: Int, height: Int, angle: Int) {
+    fun image(img: BufferedImage, _x: Int, _y: Int, width: Int, height: Int, angle: Int = 0) {
 
         // on ajoute un décalage sur x et y en fonction de l'angle de rotation
         // afin d'obtenir une rotation par raport au coins inférieur gauche
@@ -61,9 +61,13 @@ class DrawRequest(private val g: Graphics2D, private val width: Int, private val
         this.g.drawImage(img, trans, null)
     }
 
+    fun image(img: BufferedImage, _x: Int, _y:Int){
+        this.g.drawImage(img, null, _x, this.height - _y - img.height)
+    }
+
     fun fillRect(x: Int, y: Int, width: Int, height: Int, c: Color) {
         this.g.color = c
-        this.g.fillRect(x, this.height - y, width, height)
+        this.g.fillRect(x, this.height - y - height, width, height)
         this.g.color = Color.BLACK
     }
 

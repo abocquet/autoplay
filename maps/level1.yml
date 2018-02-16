@@ -1,0 +1,22 @@
+params:
+  maille: 40
+  width: 20
+  height: 10
+
+level:
+  bloc:
+    name: b1
+    x: 4
+    y: 2
+    width: 3
+    height: 1
+
+  hero:
+    x: 1
+    y: 0
+
+  bot:
+    type: turtle
+    goes:
+      from: 4
+      to: 7
