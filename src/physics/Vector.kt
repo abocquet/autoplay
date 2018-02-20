@@ -1,9 +1,7 @@
 package physics
 
-class Vector(_x: Double = 0.0, _y: Double = 0.0) {
+class Vector(var x: Double = 0.0, var y: Double = 0.0) {
 
-    var x = _x
-    var y = _y
 
     constructor(v: Vector) : this() {
         this.x = v.x
@@ -25,5 +23,9 @@ class Vector(_x: Double = 0.0, _y: Double = 0.0) {
 
     fun normeSquare(): Double {
         return x * x + y * y
+    }
+
+    fun add(x: Double, y: Double): Vector {
+        return Vector(this.x + x, this.y + y)
     }
 }

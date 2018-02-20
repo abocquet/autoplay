@@ -21,16 +21,14 @@ class PeopleController(level: Level, graphics: GraphicCore, physicCore: PhysicCo
         })
 
         physicCore.listeners.add({
-
             val iterator = level.personnages.listIterator()
             while (iterator.hasNext()) {
                 val p = iterator.next()
-                if(p.life == 0){
+                if(p.life <= 0){
                     iterator.remove()
                     level.objects.remove(p)
                 }
             }
-
         })
     }
 
