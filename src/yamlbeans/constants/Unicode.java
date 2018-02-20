@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans.constants;
+package yamlbeans.constants;
 
 public final class Unicode {
 

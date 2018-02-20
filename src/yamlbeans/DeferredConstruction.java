@@ -14,9 +14,9 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans;
+package yamlbeans;
 
-import com.esotericsoftware.yamlbeans.Beans.Property;
+import yamlbeans.Beans.Property;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

@@ -1,20 +1,20 @@
-package com.esotericsoftware.yamlbeans.document;
+package yamlbeans.document;
 
-import static com.esotericsoftware.yamlbeans.parser.EventType.*;
+import static yamlbeans.parser.EventType.*;
 
 import java.io.Reader;
 import java.io.StringReader;
 
-import com.esotericsoftware.yamlbeans.Version;
-import com.esotericsoftware.yamlbeans.YamlException;
-import com.esotericsoftware.yamlbeans.parser.AliasEvent;
-import com.esotericsoftware.yamlbeans.parser.Event;
-import com.esotericsoftware.yamlbeans.parser.MappingStartEvent;
-import com.esotericsoftware.yamlbeans.parser.Parser;
-import com.esotericsoftware.yamlbeans.parser.Parser.ParserException;
-import com.esotericsoftware.yamlbeans.parser.ScalarEvent;
-import com.esotericsoftware.yamlbeans.parser.SequenceStartEvent;
-import com.esotericsoftware.yamlbeans.tokenizer.Tokenizer.TokenizerException;
+import yamlbeans.Version;
+import yamlbeans.YamlException;
+import yamlbeans.parser.AliasEvent;
+import yamlbeans.parser.Event;
+import yamlbeans.parser.MappingStartEvent;
+import yamlbeans.parser.Parser;
+import yamlbeans.parser.Parser.ParserException;
+import yamlbeans.parser.ScalarEvent;
+import yamlbeans.parser.SequenceStartEvent;
+import yamlbeans.tokenizer.Tokenizer.TokenizerException;
 
 public class YamlDocumentReader {
 

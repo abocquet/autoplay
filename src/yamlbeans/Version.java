@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans;
+package yamlbeans;
 
 /** Represents the version of a YAML document.
  * @author <a href="mailto:misc@n4te.com">Nathan Sweet</a> */

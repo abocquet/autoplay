@@ -14,19 +14,19 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans.emitter;
+package yamlbeans.emitter;
 
-import static com.esotericsoftware.yamlbeans.parser.EventType.*;
+import static yamlbeans.parser.EventType.*;
 
-import com.esotericsoftware.yamlbeans.parser.CollectionStartEvent;
-import com.esotericsoftware.yamlbeans.parser.DocumentEndEvent;
-import com.esotericsoftware.yamlbeans.parser.DocumentStartEvent;
-import com.esotericsoftware.yamlbeans.parser.Event;
-import com.esotericsoftware.yamlbeans.parser.MappingStartEvent;
-import com.esotericsoftware.yamlbeans.parser.NodeEvent;
-import com.esotericsoftware.yamlbeans.parser.Parser;
-import com.esotericsoftware.yamlbeans.parser.ScalarEvent;
-import com.esotericsoftware.yamlbeans.parser.SequenceStartEvent;
+import yamlbeans.parser.CollectionStartEvent;
+import yamlbeans.parser.DocumentEndEvent;
+import yamlbeans.parser.DocumentStartEvent;
+import yamlbeans.parser.Event;
+import yamlbeans.parser.MappingStartEvent;
+import yamlbeans.parser.NodeEvent;
+import yamlbeans.parser.Parser;
+import yamlbeans.parser.ScalarEvent;
+import yamlbeans.parser.SequenceStartEvent;
 
 import java.io.BufferedWriter;
 import java.io.FileReader;

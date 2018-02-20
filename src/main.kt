@@ -1,23 +1,11 @@
-
-import bot.TurtleBot
-import controllers.HeroController
-import controllers.PeopleController
-import graphics.GraphicCore
-import graphics.renderers.SpriteSheetRenderer
-import level.Level
-import models.Bloc
-import models.People
-import physics.PhysicCore
-import physics.behaviours.GravityBehaviour
-import java.awt.Dimension
-import java.io.File
-import javax.imageio.ImageIO
+import level.LevelLoader
 
 fun main(args: Array<String>) {
 
 
+    val loaded = LevelLoader().load("maps/level1.yaml")
 
-    val hero = People(
+    /*val hero = People(
         200.0, 100.0, Dimension(40, 40), GravityBehaviour(),
         SpriteSheetRenderer(ImageIO.read(File("assets/smb_mario_sheet.png")), arrayOf(180), arrayOf(210), 0, 15, 15)
     )
@@ -42,5 +30,5 @@ fun main(args: Array<String>) {
     val personnagesController = PeopleController(level, graphics, physics)
 
     graphics.start()
-    physics.start()
+    physics.start()*/
 }

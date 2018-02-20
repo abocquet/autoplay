@@ -14,9 +14,9 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans.scalar;
+package yamlbeans.scalar;
 
-import com.esotericsoftware.yamlbeans.YamlException;
+import yamlbeans.YamlException;
 
 import java.text.ParseException;
 import java.util.Date;

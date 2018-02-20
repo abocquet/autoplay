@@ -11,7 +11,7 @@ class TurtleBot(val x: Double, val y: Double, private val space: Double) : Abstr
         maxSpeed.x = 50.0
     }
 
-    override fun act(level: Level) {
+    override fun act(level: Level, delta_t: Double) {
         if(position.x <= this.x){
             this.physicBehaviour.speed.x = this.maxSpeed.x
         }

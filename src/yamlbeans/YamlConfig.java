@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans;
+package yamlbeans;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -25,10 +25,10 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import com.esotericsoftware.yamlbeans.Beans.Property;
-import com.esotericsoftware.yamlbeans.emitter.EmitterConfig;
-import com.esotericsoftware.yamlbeans.scalar.DateSerializer;
-import com.esotericsoftware.yamlbeans.scalar.ScalarSerializer;
+import yamlbeans.Beans.Property;
+import yamlbeans.emitter.EmitterConfig;
+import yamlbeans.scalar.DateSerializer;
+import yamlbeans.scalar.ScalarSerializer;
 
 /** Stores configuration for reading and writing YAML.
  * @author <a href="mailto:misc@n4te.com">Nathan Sweet</a> */

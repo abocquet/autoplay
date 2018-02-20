@@ -1,6 +1,6 @@
-package com.esotericsoftware.yamlbeans.document;
+package yamlbeans.document;
 
-import com.esotericsoftware.yamlbeans.YamlException;
+import yamlbeans.YamlException;
 
 public interface YamlDocument {
 	

@@ -1,5 +1,6 @@
 package controllers
 
+import bot.FlowerBot
 import graphics.GraphicCore
 import level.Level
 import models.People
@@ -57,6 +58,7 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                 val ph = it.dimension.height
 
                 if (it != level.hero
+                    && it !is FlowerBot
                     && hy >= py + ph / 2
                     && (
                         (px <= hx && hx <= px + pw) ||
@@ -87,13 +89,9 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
         }
 
         if(e?.keyCode == 32 && (
-            pb.speed.y == 0.0 || pb.margins.bottom < 50 ||
-            pb.margins.left == 0.0 || pb.margins.right == 0.0
+            pb.speed.y == 0.0 || pb.margins.bottom < 50
         )){
             pb.speed.y = level.hero.maxSpeed.y
-
-            if(pb.margins.right == 0.0){ pb.speed.x = -level.hero.maxSpeed.x / 2 }
-            if(pb.margins.left  == 0.0){ pb.speed.x =  level.hero.maxSpeed.x / 2 }
         }
     }
 

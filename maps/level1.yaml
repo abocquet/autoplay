@@ -1,0 +1,30 @@
+params:
+  maille: 32
+  width: 30
+  height: 15
+
+hero:
+  x: 1
+  y: 1
+
+blocs:
+  bloc:
+    type: plain
+    x: 4
+    y: 4
+    width: 3
+    height: 1
+
+  bloc:
+    type: tube
+    x: 11
+    y: 1
+    flower: true
+
+bots:
+  bot:
+    type: turtle
+    y: 1
+    goes:
+      from: 7
+      to: 10

@@ -1,10 +1,10 @@
-package com.esotericsoftware.yamlbeans.document;
+package yamlbeans.document;
 
 import java.io.IOException;
 
-import com.esotericsoftware.yamlbeans.YamlConfig.WriteConfig;
-import com.esotericsoftware.yamlbeans.emitter.Emitter;
-import com.esotericsoftware.yamlbeans.emitter.EmitterException;
+import yamlbeans.YamlConfig.WriteConfig;
+import yamlbeans.emitter.Emitter;
+import yamlbeans.emitter.EmitterException;
 
 public abstract class YamlElement {
 

@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans;
+package yamlbeans;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -30,20 +30,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.esotericsoftware.yamlbeans.Beans.Property;
-import com.esotericsoftware.yamlbeans.YamlConfig.WriteClassName;
-import com.esotericsoftware.yamlbeans.YamlConfig.WriteConfig;
-import com.esotericsoftware.yamlbeans.document.YamlElement;
-import com.esotericsoftware.yamlbeans.emitter.Emitter;
-import com.esotericsoftware.yamlbeans.emitter.EmitterException;
-import com.esotericsoftware.yamlbeans.parser.AliasEvent;
-import com.esotericsoftware.yamlbeans.parser.DocumentEndEvent;
-import com.esotericsoftware.yamlbeans.parser.DocumentStartEvent;
-import com.esotericsoftware.yamlbeans.parser.Event;
-import com.esotericsoftware.yamlbeans.parser.MappingStartEvent;
-import com.esotericsoftware.yamlbeans.parser.ScalarEvent;
-import com.esotericsoftware.yamlbeans.parser.SequenceStartEvent;
-import com.esotericsoftware.yamlbeans.scalar.ScalarSerializer;
+import yamlbeans.Beans.Property;
+import yamlbeans.YamlConfig.WriteClassName;
+import yamlbeans.YamlConfig.WriteConfig;
+import yamlbeans.document.YamlElement;
+import yamlbeans.emitter.Emitter;
+import yamlbeans.emitter.EmitterException;
+import yamlbeans.parser.AliasEvent;
+import yamlbeans.parser.DocumentEndEvent;
+import yamlbeans.parser.DocumentStartEvent;
+import yamlbeans.parser.Event;
+import yamlbeans.parser.MappingStartEvent;
+import yamlbeans.parser.ScalarEvent;
+import yamlbeans.parser.SequenceStartEvent;
+import yamlbeans.scalar.ScalarSerializer;
 
 /** Serializes Java objects as YAML.
  * @author <a href="mailto:misc@n4te.com">Nathan Sweet</a> */

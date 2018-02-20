@@ -1,11 +1,11 @@
-package com.esotericsoftware.yamlbeans.document;
+package yamlbeans.document;
 
 import java.io.IOException;
 
-import com.esotericsoftware.yamlbeans.YamlConfig.WriteConfig;
-import com.esotericsoftware.yamlbeans.emitter.Emitter;
-import com.esotericsoftware.yamlbeans.emitter.EmitterException;
-import com.esotericsoftware.yamlbeans.parser.ScalarEvent;
+import yamlbeans.YamlConfig.WriteConfig;
+import yamlbeans.emitter.Emitter;
+import yamlbeans.emitter.EmitterException;
+import yamlbeans.parser.ScalarEvent;
 
 public class YamlScalar extends YamlElement {
 

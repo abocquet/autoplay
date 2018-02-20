@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans.emitter;
+package yamlbeans.emitter;
 
 /** @author <a href="mailto:misc@n4te.com">Nathan Sweet</a> */
 public class EmitterException extends RuntimeException {

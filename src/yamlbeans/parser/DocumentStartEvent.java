@@ -14,9 +14,9 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans.parser;
+package yamlbeans.parser;
 
-import com.esotericsoftware.yamlbeans.Version;
+import yamlbeans.Version;
 
 import java.util.Map;
 

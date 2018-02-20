@@ -14,9 +14,9 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans.scalar;
+package yamlbeans.scalar;
 
-import com.esotericsoftware.yamlbeans.YamlException;
+import yamlbeans.YamlException;
 
 /** @author <a href="mailto:misc@n4te.com">Nathan Sweet</a> */
 public interface ScalarSerializer<T> {

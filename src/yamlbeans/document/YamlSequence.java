@@ -1,15 +1,15 @@
-package com.esotericsoftware.yamlbeans.document;
+package yamlbeans.document;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.esotericsoftware.yamlbeans.YamlConfig.WriteConfig;
-import com.esotericsoftware.yamlbeans.YamlException;
-import com.esotericsoftware.yamlbeans.emitter.Emitter;
-import com.esotericsoftware.yamlbeans.emitter.EmitterException;
-import com.esotericsoftware.yamlbeans.parser.Event;
-import com.esotericsoftware.yamlbeans.parser.SequenceStartEvent;
+import yamlbeans.YamlConfig.WriteConfig;
+import yamlbeans.YamlException;
+import yamlbeans.emitter.Emitter;
+import yamlbeans.emitter.EmitterException;
+import yamlbeans.parser.Event;
+import yamlbeans.parser.SequenceStartEvent;
 
 public class YamlSequence extends YamlElement implements YamlDocument {
 

@@ -12,6 +12,10 @@ class DrawRequest(private val g: Graphics2D, private val width: Int, private val
         this.g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     }
 
+    var color : Color
+        get() { return g.color }
+        set(value) { g.color = value}
+
     fun rect(x: Int, y: Int, width: Int, height: Int, border: Float = 1.toFloat(), c: Color = Color.BLACK) {
         this.g.color = c
         this.g.stroke = BasicStroke(border)

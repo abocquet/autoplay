@@ -14,20 +14,20 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans.parser;
+package yamlbeans.parser;
 
-import static com.esotericsoftware.yamlbeans.tokenizer.TokenType.*;
+import static yamlbeans.tokenizer.TokenType.*;
 
-import com.esotericsoftware.yamlbeans.Version;
-import com.esotericsoftware.yamlbeans.tokenizer.AliasToken;
-import com.esotericsoftware.yamlbeans.tokenizer.AnchorToken;
-import com.esotericsoftware.yamlbeans.tokenizer.DirectiveToken;
-import com.esotericsoftware.yamlbeans.tokenizer.ScalarToken;
-import com.esotericsoftware.yamlbeans.tokenizer.TagToken;
-import com.esotericsoftware.yamlbeans.tokenizer.Token;
-import com.esotericsoftware.yamlbeans.tokenizer.TokenType;
-import com.esotericsoftware.yamlbeans.tokenizer.Tokenizer;
-import com.esotericsoftware.yamlbeans.tokenizer.Tokenizer.TokenizerException;
+import yamlbeans.Version;
+import yamlbeans.tokenizer.AliasToken;
+import yamlbeans.tokenizer.AnchorToken;
+import yamlbeans.tokenizer.DirectiveToken;
+import yamlbeans.tokenizer.ScalarToken;
+import yamlbeans.tokenizer.TagToken;
+import yamlbeans.tokenizer.Token;
+import yamlbeans.tokenizer.TokenType;
+import yamlbeans.tokenizer.Tokenizer;
+import yamlbeans.tokenizer.Tokenizer.TokenizerException;
 
 import java.io.FileReader;
 import java.io.IOException;

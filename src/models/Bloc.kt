@@ -1,9 +1,9 @@
 package models
 
-import graphics.renderers.BlocRenderer
+import graphics.renderers.AbstractRenderer
 import physics.behaviours.NoneBehaviour
 
-class Bloc(x: Double, y: Double, width: Int, height: Int): AbstractObject(NoneBehaviour(), BlocRenderer()){
+open class Bloc(x: Double, y: Double, width: Int, height: Int, renderer : AbstractRenderer): AbstractObject(NoneBehaviour(), renderer){
 
     init {
         position.x = x

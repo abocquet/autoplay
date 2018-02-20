@@ -4,6 +4,7 @@ import level.Level
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
+import java.lang.Integer.max
 import javax.swing.JFrame
 import javax.swing.JPanel
 
@@ -24,8 +25,8 @@ class Panel(val drawers: MutableList<Drawable>, val level: Level) : JPanel() {
         g.color = Color.BLACK
 
         val dr = DrawRequest(g, this.width, this.height)
-        drawers.toList().forEach { d -> d.render(dr, scrolling)}
         level.objects.toList().forEach { d -> d.render(dr, scrolling) }
+        drawers.toList().forEach { d -> d.render(dr, scrolling)}
 
         //On libère les ressources système manuellement
         //http://docs.oracle.com/javase/7/docs/api/java/awt/Graphics.html#dispose()
@@ -37,7 +38,7 @@ class Panel(val drawers: MutableList<Drawable>, val level: Level) : JPanel() {
 
 class GraphicCore(val level: Level, width: Int, height: Int): JFrame() {
 
-    var FRAMERATE = 60
+    var FRAMERATE = 24
 
     val drawables = mutableListOf<Drawable>()
     private val pan = Panel(drawables, level)
@@ -78,11 +79,11 @@ class GraphicCore(val level: Level, width: Int, height: Int): JFrame() {
                 val scrolling = pan.scrolling
 
                 if(x - scrolling <  200){
-                    pan.scrolling = (x - 200).toInt()
+                    pan.scrolling = max((x - 200).toInt(), 0)
                 }
 
-                if(x> scrolling + 500){
-                    pan.scrolling = (x - 500).toInt()
+                if(x > scrolling + 300){
+                    pan.scrolling = (x - 300).toInt()
                 }
 
                 listeners.forEach { it() }

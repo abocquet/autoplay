@@ -14,9 +14,13 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.esotericsoftware.yamlbeans;
+package yamlbeans;
 
-import static com.esotericsoftware.yamlbeans.parser.EventType.*;
+import yamlbeans.Beans.Property;
+import yamlbeans.parser.*;
+import yamlbeans.parser.Parser.ParserException;
+import yamlbeans.scalar.ScalarSerializer;
+import yamlbeans.tokenizer.Tokenizer.TokenizerException;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,27 +28,15 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
-import com.esotericsoftware.yamlbeans.Beans.Property;
-import com.esotericsoftware.yamlbeans.parser.AliasEvent;
-import com.esotericsoftware.yamlbeans.parser.CollectionStartEvent;
-import com.esotericsoftware.yamlbeans.parser.Event;
-import com.esotericsoftware.yamlbeans.parser.Parser;
-import com.esotericsoftware.yamlbeans.parser.Parser.ParserException;
-import com.esotericsoftware.yamlbeans.parser.ScalarEvent;
-import com.esotericsoftware.yamlbeans.scalar.ScalarSerializer;
-import com.esotericsoftware.yamlbeans.tokenizer.Tokenizer.TokenizerException;
+import static yamlbeans.parser.EventType.*;
 
 /** Deserializes Java objects from YAML.
  * @author <a href="mailto:misc@n4te.com">Nathan Sweet</a> */
 public class YamlReader {
-	private final YamlConfig config;
+	private final yamlbeans.YamlConfig config;
 	Parser parser;
 	private final Map<String, Object> anchors = new HashMap();
 

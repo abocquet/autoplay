@@ -9,8 +9,8 @@ class Level(val hero: People) {
     val personnages = mutableListOf<People>()
 
     init {
-        objects.add(hero)
         personnages.add(hero)
+        objects.add(hero)
     }
 
 }
