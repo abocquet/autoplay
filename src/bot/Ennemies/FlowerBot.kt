@@ -1,5 +1,6 @@
-package bot
+package bot.Ennemies
 
+import bot.AbstractBot
 import graphics.renderers.SpriteSheetRenderer
 import level.Level
 import models.Tube

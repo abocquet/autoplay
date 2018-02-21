@@ -1,5 +1,6 @@
-package bot
+package bot.Ennemies
 
+import bot.AbstractBot
 import graphics.renderers.TurtleRenderer
 import level.Level
 import physics.behaviours.InertiaBehaviour

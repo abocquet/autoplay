@@ -1,8 +1,10 @@
 package controllers
 
-import bot.FlowerBot
+import bot.Ennemies.FlowerBot
+import bot.Items.ItemBot
 import graphics.GraphicCore
 import level.Level
+import models.ItemBloc
 import models.People
 import physics.PhysicCore
 import physics.Vector
@@ -11,7 +13,7 @@ import java.awt.event.KeyListener
 
 class HeroController(val level: Level, graphics: GraphicCore, physicCore: PhysicCore) : AbstractControler(level, graphics, physicCore), KeyListener {
 
-    var targeting: People? = null
+    private var targeting: People? = null
 
     init {
         graphics.addKeyListener(this)
@@ -23,6 +25,7 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
             val hx = level.hero.position.x
             val hy = level.hero.position.y
             val hw = level.hero.dimension.width
+            val hh = level.hero.dimension.height
 
             // Gestion des collisions
             level.personnages.forEach {
@@ -41,12 +44,17 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                     )
                 ) {
 
-                    if(it == targeting){
-                        it.life = 0
-                        level.hero.physicBehaviour.speed.y = level.hero.maxSpeed.y
-                    } else {
-                        level.hero.life -= 1
-                        println(level.hero.life)
+                    if(it is ItemBot){
+                        it.actOn(level)
+                    }
+                    else {
+                        if (it == targeting) {
+                            it.life = 0
+                            level.hero.physicBehaviour.speed.y = level.hero.maxSpeed.y
+                        } else {
+                            level.hero.life -= 1
+                            println(level.hero.life)
+                        }
                     }
 
                 }
@@ -84,6 +92,26 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                 }
             }
 
+            val elementsToAdd = mutableListOf<ItemBot?>()
+            // On ajoute les items
+            level.objects.forEach {
+
+                val bx = it.position.x
+                val by = it.position.y
+                val bw = it.dimension.width
+
+                if(it is ItemBloc){
+                    if(hy + hh == by && hx <= bx + bw && hx + hw >= bx) {
+                        elementsToAdd.add(it.use(level))
+                    }
+                }
+            }
+
+            elementsToAdd.filterNotNull().forEach { item ->
+                level.objects.add(item)
+                level.personnages.add(item)
+            }
+
         })
     }
 
@@ -112,7 +140,7 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
         }
     }
 
-    fun mixtProduct (p1: Vector, p2: Vector, p3: Vector) : Double
+    private fun mixtProduct (p1: Vector, p2: Vector, p3: Vector) : Double
     {
         return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y)
     }

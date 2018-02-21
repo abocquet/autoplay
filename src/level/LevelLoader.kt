@@ -1,7 +1,8 @@
 package level
 
-import bot.FlowerBot
-import bot.TurtleBot
+import bot.Ennemies.FlowerBot
+import bot.Ennemies.TurtleBot
+import bot.Items.MushroomItem
 import controllers.HeroController
 import controllers.PeopleController
 import graphics.GraphicCore
@@ -9,6 +10,7 @@ import graphics.renderers.BlocRenderer
 import graphics.renderers.SpriteSheetRenderer
 import graphics.renderers.SquareRenderer
 import models.Bloc
+import models.ItemBloc
 import models.People
 import models.Tube
 import physics.PhysicCore
@@ -93,6 +95,13 @@ class LevelLoader {
             level.personnages.add(bot)
             level.objects.add(bot)
         }
+
+        /* Zone de tests temporaires */
+
+        val mushBloc = ItemBloc(
+            maille * 3.0, maille * 4.0, 32, 32, MushroomItem()
+        )
+        level.objects.add(mushBloc)
 
         /* lancement du niveau */
 
