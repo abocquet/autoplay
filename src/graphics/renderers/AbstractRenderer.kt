@@ -4,5 +4,5 @@ import graphics.DrawRequest
 import models.AbstractObject
 
 abstract class AbstractRenderer {
-    abstract fun draw(obj: AbstractObject, r: DrawRequest, offset: Int)
+    abstract fun draw(obj: AbstractObject, r: DrawRequest, offset: Int, delta_t: Double)
 }

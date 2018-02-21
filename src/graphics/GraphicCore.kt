@@ -9,10 +9,10 @@ import javax.swing.JFrame
 import javax.swing.JPanel
 
 interface Drawable {
-    fun render(r: DrawRequest, offset: Int)
+    fun render(r: DrawRequest, offset: Int, delta_t: Double)
 }
 
-class Panel(val drawers: MutableList<Drawable>, val level: Level) : JPanel() {
+class Panel(val drawers: MutableList<Drawable>, val level: Level, var delta_t: Double) : JPanel() {
 
     var scrolling = 0
 
@@ -25,8 +25,8 @@ class Panel(val drawers: MutableList<Drawable>, val level: Level) : JPanel() {
         g.color = Color.BLACK
 
         val dr = DrawRequest(g, this.width, this.height)
-        level.objects.toList().forEach { d -> d.render(dr, scrolling) }
-        drawers.toList().forEach { d -> d.render(dr, scrolling)}
+        level.objects.toList().forEach { d -> d.render(dr, scrolling, delta_t) }
+        drawers.toList().forEach { d -> d.render(dr, scrolling, delta_t)}
 
         //On libère les ressources système manuellement
         //http://docs.oracle.com/javase/7/docs/api/java/awt/Graphics.html#dispose()
@@ -41,7 +41,7 @@ class GraphicCore(val level: Level, width: Int, height: Int): JFrame() {
     var FRAMERATE = 24
 
     val drawables = mutableListOf<Drawable>()
-    private val pan = Panel(drawables, level)
+    private val pan = Panel(drawables, level, (1.0 / FRAMERATE))
     private var t: Thread? = null
     val listeners = mutableListOf<() -> Unit>()
 
@@ -90,7 +90,7 @@ class GraphicCore(val level: Level, width: Int, height: Int): JFrame() {
 
                 pan.repaint()
                 try {
-                    Thread.sleep((1000 / FRAMERATE).toLong())
+                    Thread.sleep((1000 * pan.delta_t).toLong())
                 } catch (e: InterruptedException) {
                     Thread.currentThread().interrupt()
                     break

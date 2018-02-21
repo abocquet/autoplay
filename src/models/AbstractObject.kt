@@ -13,8 +13,8 @@ open class AbstractObject(val physicBehaviour: AbstractPhysicBehaviour, val rend
     final override var position = Vector()
     val dimension = Dimension(30, 30)
 
-    override fun render(dr: DrawRequest, offset: Int){
-        renderer.draw(this, dr, offset)
+    override fun render(dr: DrawRequest, offset: Int, delta_t: Double){
+        renderer.draw(this, dr, offset, delta_t)
     }
 
     override fun update(delta_t: Double, objects: List<AbstractObject>){

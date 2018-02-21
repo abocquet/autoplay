@@ -8,13 +8,25 @@ open class SpriteSheetRenderer(val spritesheet: BufferedImage, var seqLeft: Arra
 
     var x = seqLeft[0]
 
-    override fun draw(obj: AbstractObject, r: DrawRequest, offset: Int) {
+    val animationStep = .1
+    var lastChanged = 0.0
+    var currentFrame = 0
+
+    override fun draw(obj: AbstractObject, r: DrawRequest, offset: Int, delta_t: Double) {
+
+        lastChanged += delta_t
+
+
+        if(lastChanged >= animationStep){
+            currentFrame = (currentFrame + 1) % seqLeft.size
+            lastChanged = 0.0
+        }
 
         if(obj.renderer is SpriteSheetRenderer) {
             if (obj.physicBehaviour.speed.x > 0) {
-                obj.renderer.x = obj.renderer.seqRight[0]
+                x = seqRight[currentFrame]
             } else if (obj.physicBehaviour.speed.x < 0) {
-                obj.renderer.x = obj.renderer.seqLeft[0]
+                x = seqLeft[currentFrame]
             }
         }
 

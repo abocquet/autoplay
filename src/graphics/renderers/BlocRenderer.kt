@@ -9,7 +9,7 @@ open class BlocRenderer(spritesheet: BufferedImage, val x: Int, val y: Int, val 
 
     val subimage = spritesheet.getSubimage(x, y, side, side)
 
-    override fun draw(obj: AbstractObject, r: DrawRequest, offset: Int) {
+    override fun draw(obj: AbstractObject, r: DrawRequest, offset: Int, delta_t: Double) {
         for(k in 0 until obj.dimension.width / side) {
             val w = min(side, obj.dimension.width - k * side)
 

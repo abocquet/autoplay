@@ -6,9 +6,9 @@ import models.People
 import java.io.File
 import javax.imageio.ImageIO
 
-class MarioRenderer : SpriteSheetRenderer(ImageIO.read(File("assets/smb_mario_sheet.png")), arrayOf(180), arrayOf(210), 0, 15, 15){
+class MarioRenderer : SpriteSheetRenderer(ImageIO.read(File("assets/smb_mario_sheet.png")), arrayOf(180, 150, 120, 90), arrayOf(210, 240, 270, 300), 0, 15, 15){
 
-    override fun draw(obj: AbstractObject, r: DrawRequest, offset: Int) {
+    override fun draw(obj: AbstractObject, r: DrawRequest, offset: Int, delta_t: Double) {
 
         if(obj is People){
             this.y =  when(obj.life) {
@@ -22,7 +22,7 @@ class MarioRenderer : SpriteSheetRenderer(ImageIO.read(File("assets/smb_mario_sh
             }
         }
 
-        super.draw(obj, r, offset)
+        super.draw(obj, r, offset, delta_t)
     }
 
 }
