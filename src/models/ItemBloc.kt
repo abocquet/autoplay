@@ -1,6 +1,6 @@
 package models
 
-import bot.Items.ItemBot
+import bot.items.ItemBot
 import graphics.renderers.SpriteSheetRenderer
 import level.Level
 import java.io.File
@@ -20,7 +20,8 @@ class ItemBloc(x: Double, y: Double, width: Int, height: Int, val item: ItemBot)
         if(!used) {
             used = true
             (this.renderer as SpriteSheetRenderer).x = 432
-            item.position = this.position.add(0.0, this.dimension.height + 2.0)
+            item.position = this.position.copy()
+            item.physicBehaviour.speed.y = 350.0
             return item
         }
 

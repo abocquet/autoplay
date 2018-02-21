@@ -1,8 +1,9 @@
 package physics.behaviours
 
-import physics.Vector
 import models.AbstractObject
 import models.Bloc
+import models.ItemBloc
+import physics.Vector
 
 /**
  * @author adrienbocquet
@@ -28,11 +29,11 @@ abstract class AbstractPhysicBehaviour : Cloneable {
     var speed = Vector()
     var acceleration = Vector()
 
-    abstract fun update(obj: AbstractObject, delta_t: Double, obstacles: MutableList<AbstractObject>)
+    abstract fun update(obj: AbstractObject, delta_t: Double, obstacles: List<AbstractObject>)
 
-    protected fun calcMargin(obj: AbstractObject, blocs: MutableList<AbstractObject>, deplacement: Vector){
+    protected fun calcMargin(obj: AbstractObject, blocs: List<AbstractObject>, deplacement: Vector){
         this.margins = Margins()
-        blocs.forEach { o -> if(o is Bloc) this.calcMargin(obj, o, deplacement) }
+        blocs.forEach { o -> if(o is Bloc || o is ItemBloc) this.calcMargin(obj, o, deplacement) }
     }
 
     /**
@@ -71,7 +72,7 @@ abstract class AbstractPhysicBehaviour : Cloneable {
 		 */
 
         // On regarde d'abord en haut...
-        if (isBetween(tx, bx - nx, bx + bw + nx) || isBetween(tx + tw, bx - nx, bx + bw + nx) || isBetween(bx, tx, tx + tw)) {
+        if (tx in bx - nx..bx + bw + nx || tx + tw in bx - nx..bx + bw + nx || bx in tx..tx + tw) {
             val d = by - (ty + th)
 
             if (0 <= d && d < margins.top) {
@@ -80,7 +81,7 @@ abstract class AbstractPhysicBehaviour : Cloneable {
         }
 
         // ... en bas ...
-        if (isBetween(tx, bx - nx, bx + bw + nx) || isBetween(tx + tw, bx - nx, bx + bw + nx) || isBetween(bx, tx, tx + tw)) {
+        if (tx in bx - nx..bx + bw + nx || tx + tw in bx - nx..bx + bw + nx || bx in tx..tx + tw) {
             val d = ty - (by + bh)
             if (0 <= d && d < margins.bottom) {
                 margins.bottom = d
@@ -88,7 +89,7 @@ abstract class AbstractPhysicBehaviour : Cloneable {
         }
 
         // ... à gauche ...
-        if (isBetween(ty, by - ny, by + bh + ny) || isBetween(ty + th, by - ny, by + bh + ny) || isBetween(by, ty, ty + th)) {
+        if (ty in by - ny..by + bh + ny || ty + th in by - ny..by + bh + ny || by in ty..ty + th) {
             val d = tx - (bx + bw)
 
             if (0 <= d && d < margins.left) {
@@ -97,7 +98,7 @@ abstract class AbstractPhysicBehaviour : Cloneable {
         }
 
         // et enfin à droite
-        if (isBetween(ty, by - ny, by + bh + ny) || isBetween(ty + th, by - ny, by + bh + ny) || isBetween(by, ty, ty + th)) {
+        if (ty in by - ny..by + bh + ny || ty + th in by - ny..by + bh + ny || by in ty..ty + th) {
             val d = bx - (tx + tw)
 
             if (0 <= d && d < margins.right) {
@@ -105,10 +106,6 @@ abstract class AbstractPhysicBehaviour : Cloneable {
             }
         }
 
-    }
-
-    private fun isBetween(value: Double, inf: Double, sup: Double): Boolean {
-        return inf < value && value < sup
     }
 
 }

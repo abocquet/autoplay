@@ -1,4 +1,4 @@
-package bot.Items
+package bot.items
 
 import bot.AbstractBot
 import graphics.renderers.AbstractRenderer

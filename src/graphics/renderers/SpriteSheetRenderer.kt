@@ -9,6 +9,15 @@ open class SpriteSheetRenderer(val spritesheet: BufferedImage, var seqLeft: Arra
     var x = seqLeft[0]
 
     override fun draw(obj: AbstractObject, r: DrawRequest, offset: Int) {
+
+        if(obj.renderer is SpriteSheetRenderer) {
+            if (obj.physicBehaviour.speed.x > 0) {
+                obj.renderer.x = obj.renderer.seqRight[0]
+            } else if (obj.physicBehaviour.speed.x < 0) {
+                obj.renderer.x = obj.renderer.seqLeft[0]
+            }
+        }
+
         r.image(
             spritesheet.getSubimage(x, y, width, height),
             obj.position.x.toInt() - offset, obj.position.y.toInt(),

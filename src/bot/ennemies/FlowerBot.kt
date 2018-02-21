@@ -1,4 +1,4 @@
-package bot.Ennemies
+package bot.ennemies
 
 import bot.AbstractBot
 import graphics.renderers.SpriteSheetRenderer

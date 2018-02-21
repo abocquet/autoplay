@@ -6,7 +6,7 @@ import java.lang.Double.min
 
 open class InertiaBehaviour : AbstractPhysicBehaviour() {
 
-    override fun update(obj: AbstractObject, delta_t: Double, obstacles: MutableList<AbstractObject>) {
+    override fun update(obj: AbstractObject, delta_t: Double, obstacles: List<AbstractObject>) {
 
         val deplacement = speed * delta_t
         this.calcMargin(obj, obstacles, deplacement)

@@ -1,13 +1,12 @@
 package controllers
 
-import bot.Ennemies.FlowerBot
-import bot.Items.ItemBot
+import bot.ennemies.FlowerBot
+import bot.items.ItemBot
 import graphics.GraphicCore
 import level.Level
 import models.ItemBloc
 import models.People
 import physics.PhysicCore
-import physics.Vector
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 
@@ -36,12 +35,8 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                 val ph = it.dimension.height
 
                 if (it != level.hero
-                    && py <= hy && hy <= py + ph
-                    && (
-                        (px <= hx && hx <= px + pw) ||
-                        (px <= hx + hw && hx + hw <= px + pw) ||
-                        (hx <= px && px + pw <= hx + hw)
-                    )
+                    && py <= hy + hh && hy <= py + ph
+                    && (px <= hx + hw && hx <= px+pw)
                 ) {
 
                     if(it is ItemBot){
@@ -70,21 +65,9 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
 
                 if (it != level.hero
                     && it !is FlowerBot
-                    && hy >= py + ph / 2
-                    && (
-                        inTriangle(
-                            Vector(level.hero.position),
-                            Vector(px, py + ph),
-                            Vector(px + pw, py + ph),
-                            Vector(px + pw / 2, py - ph / 2)
-                        ) ||
-                        inTriangle(
-                            Vector(level.hero.position.add(hw.toDouble(), 0.0)),
-                            Vector(px, py + ph),
-                            Vector(px + pw, py + ph),
-                            Vector(px + pw / 2, py - ph / 2)
-                        )
-                    ) && (targeting?.position?.y ?: py-1) < py
+                    && hy >= py + ph - 3
+                    && (px <= hx + hw && hx <= px + pw)
+                    && (targeting?.position?.y ?: py-1) < py
                 ){
                     targeting = it
                 } else if(targeting == it){
@@ -138,21 +121,6 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
             'q' -> if(level.hero.physicBehaviour.speed.x == -level.hero.maxSpeed.x) level.hero.physicBehaviour.speed.x = 0.0
             'd' -> if(level.hero.physicBehaviour.speed.x == level.hero.maxSpeed.x) level.hero.physicBehaviour.speed.x = 0.0
         }
-    }
-
-    private fun mixtProduct (p1: Vector, p2: Vector, p3: Vector) : Double
-    {
-        return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y)
-    }
-
-    private fun inTriangle(p: Vector, t1: Vector, t2: Vector, t3: Vector) : Boolean {
-
-        val b1 = mixtProduct(p, t1, t2) < 0.0f
-        val b2 = mixtProduct(p, t2, t3) < 0.0f
-        val b3 = mixtProduct(p, t3, t1) < 0.0f
-
-        return ((b1 == b2) && (b2 == b3))
-
     }
 
 }

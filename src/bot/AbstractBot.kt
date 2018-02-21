@@ -10,7 +10,7 @@ import java.awt.Dimension
 abstract class AbstractBot(x: Double, y: Double, dimension: Dimension, physicBehaviour: AbstractPhysicBehaviour, renderer: AbstractRenderer) : People(x, y, dimension, physicBehaviour, renderer) {
     abstract fun act(level: Level, delta_t: Double)
 
-    fun update(delta_t: Double, objects: MutableList<AbstractObject>, level: Level){
+    open fun update(delta_t: Double, objects: List<AbstractObject>, level: Level){
         physicBehaviour.update(this, delta_t, objects)
         act(level, delta_t)
     }

@@ -7,8 +7,7 @@ import java.awt.Dimension
 
 open class People(x: Double, y: Double, _dimension: Dimension, physicBehaviour: AbstractPhysicBehaviour, renderer: AbstractRenderer) : AbstractObject(physicBehaviour, renderer) {
 
-    val maxLife = 2
-    var life = maxLife
+    open var life = 1
         get
     var isHurted = false
 

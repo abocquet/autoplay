@@ -1,7 +1,6 @@
 package physics
 
-class Vector(var x: Double = 0.0, var y: Double = 0.0) {
-
+data class Vector(var x: Double = 0.0, var y: Double = 0.0) {
 
     constructor(v: Vector) : this() {
         this.x = v.x

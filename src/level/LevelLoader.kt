@@ -1,18 +1,15 @@
 package level
 
-import bot.Ennemies.FlowerBot
-import bot.Ennemies.TurtleBot
-import bot.Items.MushroomItem
+import bot.ennemies.FlowerBot
+import bot.ennemies.TurtleBot
+import bot.items.MushroomItem
 import controllers.HeroController
 import controllers.PeopleController
 import graphics.GraphicCore
 import graphics.renderers.BlocRenderer
-import graphics.renderers.SpriteSheetRenderer
+import graphics.renderers.MarioRenderer
 import graphics.renderers.SquareRenderer
-import models.Bloc
-import models.ItemBloc
-import models.People
-import models.Tube
+import models.*
 import physics.PhysicCore
 import physics.behaviours.GravityBehaviour
 import yamlbeans.YamlReader
@@ -37,13 +34,18 @@ class LevelLoader {
         val hx = readInt(config, "hero.x")
         val hy = readInt(config, "hero.y")
 
-        val hero = People(
-                (hx * maille).toDouble(), (hy * maille).toDouble(),
-                Dimension(40, 40), GravityBehaviour(),
-                SpriteSheetRenderer(ImageIO.read(File("assets/smb_mario_sheet.png")), arrayOf(180), arrayOf(210), 0, 15, 15)
+        val hero = Mario(
+            (hx * maille).toDouble(), (hy * maille).toDouble()
         )
 
         val level = Level(hero)
+
+        /* Zone de tests temporaires */
+
+        val mushBloc = ItemBloc(
+                maille * 3.0, maille * 4.0, 32, 32, MushroomItem()
+        )
+        level.objects.add(mushBloc)
 
         /* Import des blocs */
         val blocSheet = ImageIO.read(File("assets/blocks_sheet.png"))
@@ -95,13 +97,6 @@ class LevelLoader {
             level.personnages.add(bot)
             level.objects.add(bot)
         }
-
-        /* Zone de tests temporaires */
-
-        val mushBloc = ItemBloc(
-            maille * 3.0, maille * 4.0, 32, 32, MushroomItem()
-        )
-        level.objects.add(mushBloc)
 
         /* lancement du niveau */
 

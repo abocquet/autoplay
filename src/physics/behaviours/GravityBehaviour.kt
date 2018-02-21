@@ -7,7 +7,7 @@ class GravityBehaviour: InertiaBehaviour() {
 
     private val gravity = 981.0 * 1.3
 
-    override fun update(obj: AbstractObject, delta_t: Double, obstacles: MutableList<AbstractObject>) {
+    override fun update(obj: AbstractObject, delta_t: Double, obstacles: List<AbstractObject>) {
 
         if (this.margins.bottom > 0) {
             acceleration.y = -gravity

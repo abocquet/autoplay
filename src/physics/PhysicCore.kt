@@ -5,7 +5,7 @@ import level.Level
 import models.AbstractObject
 
 interface Physicable {
-    fun update(delta_t: Double, objects: MutableList<AbstractObject>)
+    fun update(delta_t: Double, objects: List<AbstractObject>)
     var position: Vector
 }
 
@@ -35,11 +35,13 @@ class PhysicCore(val level: Level) {
         override fun run() {
             while (true) {
 
+                val objects = level.objects.toList()
+
                 for (p in level.objects){
                     if(p is AbstractBot){
-                        p.update(1.0 / framerate.toDouble(), level.objects, level)
+                        p.update(1.0 / framerate.toDouble(), objects, level)
                     } else {
-                        p.update(1.0 / framerate.toDouble(), level.objects)
+                        p.update(1.0 / framerate.toDouble(), objects)
                     }
                 }
 

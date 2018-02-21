@@ -17,7 +17,7 @@ open class AbstractObject(val physicBehaviour: AbstractPhysicBehaviour, val rend
         renderer.draw(this, dr, offset)
     }
 
-    override fun update(delta_t: Double, objects: MutableList<AbstractObject>){
+    override fun update(delta_t: Double, objects: List<AbstractObject>){
         physicBehaviour.update(this, delta_t, objects)
     }
 
