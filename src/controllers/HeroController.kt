@@ -5,6 +5,7 @@ import bot.items.ItemBot
 import graphics.GraphicCore
 import level.Level
 import models.ItemBloc
+import models.Mario
 import models.People
 import physics.PhysicCore
 import java.awt.event.KeyEvent
@@ -15,16 +16,19 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
     private var targeting: People? = null
 
     init {
+        val mario = level.hero as Mario
         graphics.addKeyListener(this)
-        level.hero.maxSpeed.x = 300.0
-        level.hero.maxSpeed.y = 500.0
+        mario.maxSpeed.x = 300.0
+        mario.maxSpeed.y = 500.0
 
-        physicCore.listeners.add({
+        physicCore.listeners.add({ delta_t: Double ->
 
-            val hx = level.hero.position.x
-            val hy = level.hero.position.y
-            val hw = level.hero.dimension.width
-            val hh = level.hero.dimension.height
+            val hx = mario.position.x
+            val hy = mario.position.y
+            val hw = mario.dimension.width
+            val hh = mario.dimension.height
+
+            mario.hurtedClock += delta_t
 
             // Gestion des collisions
             level.personnages.forEach {
@@ -34,7 +38,7 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                 val pw = it.dimension.width
                 val ph = it.dimension.height
 
-                if (it != level.hero
+                if (it != mario
                     && py <= hy + hh && hy <= py + ph
                     && (px <= hx + hw && hx <= px+pw)
                 ) {
@@ -45,10 +49,10 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                     else {
                         if (it == targeting) {
                             it.life = 0
-                            level.hero.physicBehaviour.speed.y = level.hero.maxSpeed.y
-                        } else {
-                            level.hero.life -= 1
-                            println(level.hero.life)
+                            mario.physicBehaviour.speed.y = mario.maxSpeed.y
+                        } else if(!mario.isHurted){
+                            mario.life -= 1
+                            println(mario.life)
                         }
                     }
 
@@ -63,7 +67,7 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                 val pw = it.dimension.width
                 val ph = it.dimension.height
 
-                if (it != level.hero
+                if (it != mario
                     && it !is FlowerBot
                     && hy >= py + ph - 3
                     && (px <= hx + hw && hx <= px + pw)

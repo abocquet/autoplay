@@ -10,9 +10,32 @@ class Mario(x: Double, y: Double) : People(
         GravityBehaviour(),
         MarioRenderer())
 {
+
+    var hurtedClock = -10.0
+    val isHurted : Boolean
+        get () {
+            if(hurtedClock in 0.0..3.0) {
+                return true
+            } else {
+                hurtedClock = -1.0
+                return false
+            }
+        }
+
+    override fun update(delta_t: Double, objects: List<AbstractObject>){
+        physicBehaviour.update(this, delta_t, objects)
+
+        if(hurtedClock >= 0.0) {
+            hurtedClock += delta_t
+        }
+    }
+
     override var life = 1
-        get
         set(value) {
+            if(value < field){
+                hurtedClock = 0.0
+            }
+
             if(value <= 2){
                 field = value
             }
