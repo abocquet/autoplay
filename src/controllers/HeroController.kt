@@ -39,8 +39,9 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                 val ph = it.dimension.height
 
                 if (it != mario
-                    && py <= hy + hh && hy <= py + ph
+                    && hy in py-1..py+ph
                     && (px <= hx + hw && hx <= px+pw)
+                    && it.life > 0
                 ) {
 
                     if(it is ItemBot){
@@ -52,7 +53,6 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                             mario.physicBehaviour.speed.y = mario.maxSpeed.y
                         } else if(!mario.isHurted){
                             mario.life -= 1
-                            println(mario.life)
                         }
                     }
 
@@ -79,8 +79,10 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                 }
             }
 
-            val elementsToAdd = mutableListOf<ItemBot?>()
             // On ajoute les items
+
+            val elementsToAdd = mutableListOf<ItemBot?>()
+
             level.objects.forEach {
 
                 val bx = it.position.x

@@ -36,13 +36,11 @@ class Mario(x: Double, y: Double) : People(
                 hurtedClock = 0.0
             }
 
-            if(value <= 2){
-                field = value
-            }
+            field = value
 
             if(life == 1){
                 this.dimension.height = 40
-            } else if(life == 2){
+            } else {
                 this.dimension.height = 80
             }
         }

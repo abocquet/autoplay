@@ -15,11 +15,12 @@ class MarioRenderer : SpriteSheetRenderer(ImageIO.read(File("assets/smb_mario_sh
         if(p is Mario){
             this.y =  when(p.life) {
                 2 -> 52
+                3 -> 122
                 else -> 0
             }
 
             this.height = when(p.life){
-                2 -> 30
+                in 2..3 -> 30
                 else -> 15
             }
 
@@ -37,5 +38,4 @@ class MarioRenderer : SpriteSheetRenderer(ImageIO.read(File("assets/smb_mario_sh
 
         super.draw(p, r, offset, delta_t)
     }
-
 }

@@ -1,15 +1,13 @@
 package models
 
 import bot.items.ItemBot
-import graphics.renderers.SpriteSheetRenderer
+import graphics.renderers.ItemBlocRenderer
 import level.Level
-import java.io.File
-import javax.imageio.ImageIO
 
-class ItemBloc(x: Double, y: Double, width: Int, height: Int, val item: ItemBot) :
+class ItemBloc(x: Double, y: Double, width: Int, height: Int, val itemer: (level: Level) -> ItemBot) :
         Bloc(
                 x, y, width, height,
-                SpriteSheetRenderer(ImageIO.read(File("assets/blocks_sheet.png")), 384, 0, 15, 15)
+                ItemBlocRenderer()
         )
 {
 
@@ -19,7 +17,7 @@ class ItemBloc(x: Double, y: Double, width: Int, height: Int, val item: ItemBot)
 
         if(!used) {
             used = true
-            (this.renderer as SpriteSheetRenderer).x = 432
+            val item = itemer(level)
             item.position = this.position.copy()
             item.physicBehaviour.speed.y = 350.0
             return item

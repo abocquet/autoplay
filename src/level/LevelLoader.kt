@@ -1,17 +1,21 @@
 package level
 
+import bot.ennemies.BaseBot
 import bot.ennemies.FlowerBot
-import bot.ennemies.TurtleBot
+import bot.ennemies.times
+import bot.items.FlowerItem
 import bot.items.MushroomItem
 import controllers.HeroController
 import controllers.PeopleController
 import graphics.GraphicCore
 import graphics.renderers.BlocRenderer
-import graphics.renderers.MarioRenderer
+import graphics.renderers.SpriteSheetRenderer
 import graphics.renderers.SquareRenderer
-import models.*
+import models.Bloc
+import models.ItemBloc
+import models.Mario
+import models.Tube
 import physics.PhysicCore
-import physics.behaviours.GravityBehaviour
 import yamlbeans.YamlReader
 import java.awt.Dimension
 import java.io.File
@@ -42,13 +46,12 @@ class LevelLoader {
 
         /* Zone de tests temporaires */
 
-        val mushBloc = ItemBloc(
-                maille * 3.0, maille * 4.0, 32, 32, MushroomItem()
-        )
-        level.objects.add(mushBloc)
+        val deadBloc = Bloc(maille * 7.0, maille * 1.0, 32, 32, SquareRenderer())
+        level.objects.add(deadBloc)
 
         /* Import des blocs */
         val blocSheet = ImageIO.read(File("assets/blocks_sheet.png"))
+        val itemSheet = ImageIO.read(File("assets/smb_items_sheet.png"))
 
         (config["blocs"] as Map<*, *>).forEach {
             val body = it.value as Map<*,*>
@@ -59,6 +62,9 @@ class LevelLoader {
 
             val bloc = when(type) {
                 "plain" -> Bloc(x, y, readInt(body, "width") * maille, readInt(body, "height") * maille, renderer = BlocRenderer(blocSheet, 32, 0, 16))
+                "life" -> ItemBloc(x, y, readInt(body, "width") * maille, readInt(body, "height") * maille, { l -> if(l.hero.life < 2) MushroomItem() else FlowerItem() })
+                "deadly" -> Bloc(x, y, readInt(body, "width") * maille, readInt(body, "height") * maille, renderer = SquareRenderer(), isDeadly = true)
+                "end" -> Bloc(x, y, 30, 69, renderer = SpriteSheetRenderer(itemSheet, 245, 90, 10, 24), isEnd = true)
                 "tube" -> Tube(x, y)
                 else -> fail("Type $type is not handled (yet ?) for blocks")
             }
@@ -81,7 +87,6 @@ class LevelLoader {
 
         (config["bots"] as Map<*, *>).forEach {
             val body = it.value as Map<*,*>
-
             val y = readInt(body, "y").toDouble() * maille
 
             val from = readInt(body, "goes.from").toDouble() * maille
@@ -90,7 +95,8 @@ class LevelLoader {
             val type = body["type"].toString()
 
             val bot = when(type) {
-                "turtle" -> TurtleBot(from, y, to - from)
+                "turtle" -> BaseBot(from, y, Dimension(15, 25) * 2, to - from, SpriteSheetRenderer(ImageIO.read(File("assets/smb_enemies_sheet.png")), arrayOf(150), arrayOf(210), 0, 15, 25))
+                "goomba" -> BaseBot(from, y, Dimension(15, 15) * 2, to - from, SpriteSheetRenderer(ImageIO.read(File("assets/smb_items_sheet.png")), 184, 34, 15, 15))
                 else -> fail("Type $type is not handled (yet ?) for bots")
             }
 

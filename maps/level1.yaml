@@ -8,23 +8,47 @@ hero:
   y: 1
 
 blocs:
-  bloc:
-    type: plain
+#  bloc1:
+#    type: plain
+#    x: 4
+#    y: 4
+#    width: 3
+#    height: 1
+#
+#  bloc2:
+#    type: tube
+#    x: 11
+#    y: 1
+#    flower: true
+#
+#  bloc3:
+#      type: life
+#      x: 3
+#      y: 3
+#      width: 1
+#      height: 1
+#
+#  bloc4:
+#    type: end
+#    x: 30
+#    y: 1
+#
+  bloc6:
+    type: stairs
     x: 4
-    y: 4
-    width: 3
-    height: 1
-
-  bloc:
-    type: tube
-    x: 11
     y: 1
-    flower: true
 
 bots:
-  bot:
-    type: turtle
+  bot1:
+    type: goomba
     y: 1
     goes:
-      from: 7
-      to: 10
+      from: 16
+      to: 19
+
+  bot2:
+      type: turtle
+      y: 1
+      goes:
+        from: 15
+        to: 20
