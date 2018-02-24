@@ -20,7 +20,7 @@ class Panel(val drawers: MutableList<Drawable>, val level: Level, var delta_t: D
         val g = _g as Graphics2D
 
         // On dessine l'arrière plan
-        g.color = Color.getHSBColor(0.5699F, 0.372F, 0.9804F)
+        g.color = Color(132, 186, 255)
         g.fillRect(0, 0, this.width, this.height)
         g.color = Color.BLACK
 

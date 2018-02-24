@@ -11,7 +11,7 @@ open class BlocRenderer(spritesheet: BufferedImage, val x: Int, val y: Int, val 
 
     override fun draw(obj: AbstractObject, r: DrawRequest, offset: Int, delta_t: Double) {
         for(k in 0 until obj.dimension.width / side) {
-            val w = min(side, obj.dimension.width - k * side)
+            val w = min(obj.dimension.height, obj.dimension.width - k * obj.dimension.height)
 
             if(w <= 0){
                 continue
@@ -19,7 +19,7 @@ open class BlocRenderer(spritesheet: BufferedImage, val x: Int, val y: Int, val 
 
             r.image(
                 subimage,
-                obj.position.x.toInt() - offset + k * side, obj.position.y.toInt(),
+                obj.position.x.toInt() - offset + k * obj.dimension.height, obj.position.y.toInt(),
                 w, obj.dimension.height
             )
         }

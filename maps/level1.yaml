@@ -1,54 +1,94 @@
-params:
-  maille: 32
-  width: 30
-  height: 15
-
-hero:
-  x: 1
-  y: 1
+params: {maille: 32, width: 30, height: 15 }
+hero: {x: 5, y: 1}
 
 blocs:
-#  bloc1:
-#    type: plain
-#    x: 4
-#    y: 4
-#    width: 3
-#    height: 1
-#
-#  bloc2:
-#    type: tube
-#    x: 11
-#    y: 1
-#    flower: true
-#
-#  bloc3:
-#      type: life
-#      x: 3
-#      y: 3
-#      width: 1
-#      height: 1
-#
-#  bloc4:
-#    type: end
-#    x: 30
-#    y: 1
-#
-  bloc6:
-    type: stairs
-    x: 4
-    y: 1
+  - { type: ground, x: 0,   y: 0,  width: 70 }
+  - { type: deadly, x: 70,  y: -1, width: 2 }
+  - { type: ground, x: 72,  y: 0,  width: 15 }
+  - { type: deadly, x: 88,  y: -1, width: 3 }
+  - { type: ground, x: 91,  y: 0,  width: 64 }
+  - { type: deadly, x: 156, y: -1, width: 2 }
+  - { type: ground, x: 158, y: 0,  width: 100 }
+
+  - { type: coin,  x: 18, y: 4 }
+  - { type: plain, x: 22, y: 4 }
+  - { type: life,  x: 23, y: 4 }
+  - { type: plain, x: 24, y: 4 }
+  - { type: coin,  x: 25, y: 4 }
+  - { type: plain, x: 26, y: 4 }
+  - { type: coin,  x: 24, y: 8 }
+
+  - { type: tube,  x: 30, y: 1, flower: true }
+  - { type: tube,  x: 40, y: 1, height: 2 }
+  - { type: tube,  x: 50, y: 1, height: 3 }
+  - { type: tube,  x: 60, y: 1, height: 4 }
+
+  - { type: plain, x: 79, y: 4}
+  - { type: life,  x: 80, y: 4}
+  - { type: plain, x: 81, y: 4}
+  - { type: plain, x: 82, y: 8, width: 8 }
+  - { type: plain, x: 93, y: 8, width: 3 }
+  - { type: coin,  x: 97, y: 8 }
+
+  - { type: plain, x: 102, y: 4, width: 3 }
+
+  - { type: coin,  x: 108, y: 4 }
+  - { type: coin,  x: 111, y: 4 }
+  - { type: coin,  x: 114, y: 4 }
+  - { type: life,  x: 111, y: 8 }
+
+  - { type: plain, x: 120, y: 4 }
+  - { type: plain, x: 123, y: 8, width: 3 }
+
+  - { type: plain, x: 130, y: 8 }
+  - { type: coin,  x: 131, y: 8 }
+  - { type: coin,  x: 132, y: 8 }
+  - { type: plain, x: 133, y: 8 }
+  - { type: plain, x: 131, y: 4, width: 2 }
+
+  - { type: stair, x: 136, y: 1 }
+  - { type: stair, x: 141, y: 1, reversed: true }
+
+  - { type: stair, x: 151, y: 1 }
+  - { type: stair, x: 157, y: 1, reversed: true }
+
+  - { type: tube,  x: 166, y: 1, flower: true}
+
+  - { type: plain, x: 170, y: 4, width: 2 }
+  - { type: coin,  x: 172, y: 4 }
+  - { type: plain, x: 173, y: 4 }
+
+  - { type: tube,  x: 182, y: 1 }
+  - { type: stair, x: 184, y: 1, size: 8}
+  - { type: end,   x: 200, y: 1}
+
 
 bots:
-  bot1:
-    type: goomba
-    y: 1
-    goes:
-      from: 16
-      to: 19
+  - { type: goomba, y: 1, goes: { from: 20, to: 27 } }
 
-  bot2:
-      type: turtle
-      y: 1
-      goes:
-        from: 15
-        to: 20
+  - { type: goomba, y: 1, goes: { from: 43, to: 47 } }
+
+  - { type: goomba, y: 1, goes: { from: 51, to: 59 } }
+  - { type: goomba, y: 1, goes: { from: 53, to: 59 } }
+
+  - { type: goomba, y: 9, goes: { from: 82, to: 89 } }
+  - { type: goomba, y: 9, goes: { from: 84, to: 88 } }
+
+  - { type: goomba, y: 1, goes: { from: 92, to: 102 } }
+  - { type: goomba, y: 1, goes: { from: 94, to: 104 } }
+
+  - { type: turtle, y: 1, goes: { from: 108, to: 114 } }
+
+  - { type: goomba, y: 1, goes: { from: 115, to: 120 } }
+  - { type: goomba, y: 1, goes: { from: 113, to: 119 } }
+
+  - { type: goomba, y: 1, goes: { from: 122, to: 130 } }
+  - { type: goomba, y: 1, goes: { from: 122, to: 132 } }
+
+  - { type: goomba, y: 1, goes: { from: 130, to: 133 } }
+  - { type: goomba, y: 1, goes: { from: 128, to: 134 } }
+
+  - { type: goomba, y: 1, goes: { from: 170, to: 180 } }
+  - { type: goomba, y: 1, goes: { from: 173, to: 181 } }
+
+

@@ -10,6 +10,7 @@ import models.People
 import physics.PhysicCore
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
+import kotlin.math.abs
 
 class HeroController(val level: Level, graphics: GraphicCore, physicCore: PhysicCore) : AbstractControler(level, graphics, physicCore), KeyListener {
 
@@ -19,7 +20,7 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
         val mario = level.hero as Mario
         graphics.addKeyListener(this)
         mario.maxSpeed.x = 300.0
-        mario.maxSpeed.y = 500.0
+        mario.maxSpeed.y = 600.0
 
         physicCore.listeners.add({ delta_t: Double ->
 
@@ -48,7 +49,10 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                         it.actOn(level)
                     }
                     else {
-                        if (it == targeting) {
+                        if (
+                            hy - py - abs(hx - px - pw / 2)>= 0 || hy - py - abs(hx + hw - px - pw / 2)>= 0
+                            && it !is FlowerBot
+                        ) {
                             it.life = 0
                             mario.physicBehaviour.speed.y = mario.maxSpeed.y
                         } else if(!mario.isHurted){
@@ -56,26 +60,6 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                         }
                     }
 
-                }
-            }
-
-            // Anticipation du personnage sur qui on va sauter
-            level.personnages.forEach {
-
-                val px = it.position.x
-                val py = it.position.y
-                val pw = it.dimension.width
-                val ph = it.dimension.height
-
-                if (it != mario
-                    && it !is FlowerBot
-                    && hy >= py + ph - 3
-                    && (px <= hx + hw && hx <= px + pw)
-                    && (targeting?.position?.y ?: py-1) < py
-                ){
-                    targeting = it
-                } else if(targeting == it){
-                    targeting = null
                 }
             }
 

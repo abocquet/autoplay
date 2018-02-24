@@ -10,7 +10,6 @@ class Mario(x: Double, y: Double) : People(
         GravityBehaviour(),
         MarioRenderer())
 {
-
     var hurtedClock = -10.0
     val isHurted : Boolean
         get () {

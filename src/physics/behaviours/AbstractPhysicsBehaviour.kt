@@ -72,16 +72,15 @@ abstract class AbstractPhysicBehaviour : Cloneable {
 		 */
 
         // On regarde d'abord en haut...
-        if (tx in bx - nx..bx + bw + nx || tx + tw in bx - nx..bx + bw + nx || bx in tx..tx + tw) {
+        if (tx in bx - nx..bx + bw + nx|| tx + tw in bx - nx..bx + bw + nx|| bx in tx..tx + tw) {
             val d = by - (ty + th)
-
             if (0 <= d && d < margins.top) {
                 margins.top = d
             }
         }
 
         // ... en bas ...
-        if (tx in bx - nx..bx + bw + nx || tx + tw in bx - nx..bx + bw + nx || bx in tx..tx + tw) {
+        if (tx in bx - nx..bx + bw + nx|| tx + tw in bx - nx..bx + bw + nx|| bx in tx..tx + tw) {
             val d = ty - (by + bh)
             if (0 <= d && d < margins.bottom) {
                 margins.bottom = d
@@ -89,7 +88,7 @@ abstract class AbstractPhysicBehaviour : Cloneable {
         }
 
         // ... à gauche ...
-        if (ty in by - ny..by + bh + ny || ty + th in by - ny..by + bh + ny || by in ty..ty + th) {
+        if (ty in by - ny+1..by + bh + ny-1|| ty + th in by - ny+1..by + bh + ny-1|| by in ty..ty + th) {
             val d = tx - (bx + bw)
 
             if (0 <= d && d < margins.left) {
@@ -98,7 +97,7 @@ abstract class AbstractPhysicBehaviour : Cloneable {
         }
 
         // et enfin à droite
-        if (ty in by - ny..by + bh + ny || ty + th in by - ny..by + bh + ny || by in ty..ty + th) {
+        if (ty in by - ny+1..by + bh + ny-1|| ty + th in by - ny+1..by + bh + ny-1|| by in ty..ty + th) {
             val d = bx - (tx + tw)
 
             if (0 <= d && d < margins.right) {

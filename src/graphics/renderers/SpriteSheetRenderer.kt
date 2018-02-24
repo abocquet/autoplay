@@ -4,12 +4,16 @@ import graphics.DrawRequest
 import models.AbstractObject
 import java.awt.image.BufferedImage
 
-open class SpriteSheetRenderer(val spritesheet: BufferedImage, var seqLeft: Array<Int>, var seqRight : Array<Int>, var y: Int, var width: Int, var height: Int) : AbstractRenderer(){
+open class SpriteSheetRenderer(
+        val spritesheet: BufferedImage,
+        var seqLeft: Array<Int>, var seqRight : Array<Int>,
+        var y: Int, var width: Int, var height: Int,
+        val animationStep : Double = .1
+) : AbstractRenderer(){
 
     var x = seqLeft[0]
     var seq = seqLeft
 
-    val animationStep = .1
     var lastChanged = 0.0
     var currentFrame = 0
 
@@ -20,7 +24,7 @@ open class SpriteSheetRenderer(val spritesheet: BufferedImage, var seqLeft: Arra
         if (obj.physicBehaviour.speed.x == 0.0){
             currentFrame = 0
         } else if(lastChanged >= animationStep){
-            currentFrame = if(seq.size == 1) 0 else ((currentFrame + 1) % (seqLeft.size - 1)) + 1
+            currentFrame = if(seq.size == 1) 0 else (currentFrame % (seqLeft.size-1)) + 1
             lastChanged = 0.0
         }
 
