@@ -12,15 +12,17 @@ fun main(args: Array<String>){
             Pair(arrayOf(1.0, 1.0), 0.0)
     )
 
-    val population = Population(2, 1, {
-        g ->
+    val population = Population(2, 1, { g ->
         val nn = CTRNN(g)
-        exam.map { 1 - (abs(nn.eval(it.first, 10.0, .1)[0] - it.second)) }.sum() - g.hidden.size * 0.05
+        exam.map { 1 - (abs(nn.eval(it.first, 10.0, .1)[0] - it.second)) }.sum() - 0.01 * g.hidden.size
     })
 
-    population.evolve(100)
-    println(population.results)
+    while (population.score < Config.fitness_threshold) {
+        population.evolve(100)
+        population.evolve(true)
+    }
 
+    println(population.results)
 
     /*val g = Genome(2, 1)
 

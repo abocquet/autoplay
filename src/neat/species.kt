@@ -1,15 +1,32 @@
 package neat
 
 import neat.stucture.Genome
-import neat.stucture.NodeType
 import java.lang.Integer.max
 import kotlin.math.abs
 
 class Species(val representative: Genome, generation: Int) {
     val created = generation
-    val last_improved = generation
+    var last_improved = generation
+        private set
+
+    private var cur_gen = generation
+
+    val stagnation : Int
+        get() = cur_gen - last_improved
+
     var members = mutableListOf<Genome>()
-    val fitness_history = mutableListOf<Int>()
+    private var fitness_history = .0
+
+    fun addFitness(fitness: Double) {
+        if(fitness > fitness_history) {
+            fitness_history = fitness
+            last_improved = cur_gen
+        }
+    }
+
+    fun nextGen(){
+        cur_gen++
+    }
 }
 
 class GenomeDistanceCache {
@@ -18,6 +35,7 @@ class GenomeDistanceCache {
 
     operator fun invoke(g1: Genome, g2: Genome) : Double {
         var distance = distances[Pair(g1, g2)]
+
         if(distance == null){
             //Compute node gene distance
             var nodeDistance = 0.0
@@ -26,19 +44,13 @@ class GenomeDistanceCache {
             g1.nodes.forEach { if(it !in g2.nodes){ disjointNodes++ } }
 
             for(n2 in g2.nodes){
-                val search = g1.nodes.filter { it.id == n2.id } // TODO: could be more efficient throught dichotomic search since nodes are sorted by id
+                val search = g1.nodes.filter { it.id == n2.id } // could be more efficient throught dichotomic search since nodes are sorted by id
                 if(search.isEmpty()){
                     disjointNodes++
                 } else {
                     val n1 = search[0]
 
-                    val c1 = g1.connections.filter { it.to == n1.id && g1.nodes.firstOrNull { n -> n.type == NodeType.BIAS }?.id == it.from }
-                    val v1 : Double = if(c1.isEmpty()){ 0.0 } else { c1[0].weight }
-
-                    val c2 = g2.connections.filter { it.to == n2.id && g2.nodes.firstOrNull { n -> n.type == NodeType.BIAS }?.id == it.from }
-                    val v2 : Double = if(c2.isEmpty()) { 0.0 } else { c2[0].weight }
-
-                    nodeDistance += abs(v1 - v2)
+                    nodeDistance += abs(n1.bias - n2.bias)
                     if(n1.activation != n2.activation){
                         nodeDistance += 1
                     }
@@ -46,7 +58,7 @@ class GenomeDistanceCache {
             }
 
             val maxNodes = max(g1.nodes.size, g2.nodes.size)
-            nodeDistance = (nodeDistance * Config.compatibility_weight_coefficient + (Config.compatibility_disjoint_coefficient * disjointNodes)) / maxNodes
+            nodeDistance = (nodeDistance * Config.compatibility_weight_coefficient + Config.compatibility_disjoint_coefficient * disjointNodes) / maxNodes
 
             //Compute connection gene difference
             var connectionDistance = 0.0
@@ -72,6 +84,7 @@ class GenomeDistanceCache {
             connectionDistance = (connectionDistance + (Config.compatibility_disjoint_coefficient * disjointConnections)) / maxConn
 
             distance = nodeDistance + connectionDistance
+            distances[Pair(g1, g2)] = distance
         }
 
         return distance

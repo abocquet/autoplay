@@ -50,7 +50,7 @@ class HeroController(val level: Level, graphics: GraphicCore, physicCore: Physic
                     }
                     else {
                         if (
-                            hy - py - abs(hx - px - pw / 2)>= 0 || hy - py - abs(hx + hw - px - pw / 2)>= 0
+                            hy - py - abs(hx - px - pw / 2)>= 0 || hy - py - abs(hx + hw - px - pw / 2) + 4 >= 0
                             && it !is FlowerBot
                         ) {
                             it.life = 0

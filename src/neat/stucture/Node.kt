@@ -4,14 +4,15 @@ import kotlin.math.exp
 
 
 enum class NodeType {
-    INPUT, HIDDEN, OUTPUT, BIAS
+    INPUT, HIDDEN, OUTPUT
 }
 
 data class Node(
         val id: Int,
         val timeConstant: Double,
         val type: NodeType = NodeType.HIDDEN,
-        val enabled: Boolean = true
+        val enabled: Boolean = true,
+        val bias: Double = 0.0
 ) {
     val activation = fun(x: Double): Double { return 1 / (1 + exp(-x))}
 

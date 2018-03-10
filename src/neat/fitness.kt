@@ -6,6 +6,8 @@ class FitnessCache(private val eval: (Genome) -> Double) {
 
     private val cache = hashMapOf<Genome, Double>()
 
+    operator fun invoke(g: Genome): Double { return fitness(g) }
+
     fun fitness(g: Genome): Double {
         if(!cache.containsKey(g)){
             cache[g] = eval(g)

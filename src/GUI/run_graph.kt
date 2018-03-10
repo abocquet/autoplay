@@ -11,7 +11,6 @@ fun main(args: Array<String>) {
     val genome = Genome(3, 2)
 
     val inputs = listOf(
-            Node(-4, 1.0, NodeType.BIAS),
             Node(-3, 1.0, NodeType.INPUT),
             Node(-2, 1.0, NodeType.INPUT),
             Node(-1, 1.0, NodeType.INPUT)

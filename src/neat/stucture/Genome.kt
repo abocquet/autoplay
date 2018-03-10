@@ -17,8 +17,8 @@ data class Genome(val inputs: List<Node>, val hidden: List<Node>, val output: Li
 
 fun Genome(n_inputs: Int, n_outputs: Int): Genome {
 
-    var nid = -n_inputs-1
-    val inputs = listOf(Node(nid++, .0, NodeType.BIAS)).plus(List(n_inputs, { Node(nid++, Config.bias_init_mean, NodeType.INPUT) }))
+    var nid = -n_inputs
+    val inputs = List(n_inputs, { Node(nid++, Config.bias_init_mean, NodeType.INPUT) })
     val outputs = List(n_outputs, { Node(nid++, 1.0, NodeType.OUTPUT) })
 
     val connections = mutableListOf<Connection>()

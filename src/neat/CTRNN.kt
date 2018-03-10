@@ -30,17 +30,13 @@ class CTRNN(private val genome: Genome) {
         /* Advance the simulation by the given amount of time, assuming that input_nodes are
         constant at the given values during the simulated time. */
         var time_seconds = 0.0
-        if (input_values.size + 1 != genome.inputs.size) {
+        if (input_values.size != genome.inputs.size) {
             throw RuntimeException("Expected ${-genome.nodes[0].id} input_nodes, got ${genome.inputs.size}")
         }
 
         nodes
             .filter { it.node.type == NodeType.INPUT }
-            .forEach { it.value = input_values[it.node.id + genome.inputs.size - 1] }
-
-        nodes
-            .filter { it.node.type == NodeType.BIAS }
-            .forEach { it.value = 1.0 }
+            .forEach { it.value = input_values[it.node.id + genome.inputs.size] }
 
         while (time_seconds < final_time) {
             val dt = java.lang.Double.min(time_step, final_time - time_seconds)
@@ -54,7 +50,7 @@ class CTRNN(private val genome: Genome) {
                 node.value =
                         node.value +
                         dt / node.node.timeConstant * (
-                        -node.value + node.node.activation(node.connections.filter { it.second.node.enabled }.map { it.first * it.second.value }.sum())
+                        -node.value + node.node.activation(node.node.bias + node.connections.filter { it.second.node.enabled }.map { it.first * it.second.value }.sum())
                         )
 
                 time_seconds += dt

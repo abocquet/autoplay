@@ -43,7 +43,7 @@ open class SpriteSheetRenderer(
             obj.dimension.width, obj.dimension.height
         )
 
-        r.rect(obj.position.x.toInt() - offset, obj.position.y.toInt(), obj.dimension.width, obj.dimension.height)
+        //r.rect(obj.position.x.toInt() - offset, obj.position.y.toInt(), obj.dimension.width, obj.dimension.height)
     }
 
     constructor(spritesheet: BufferedImage, x: Int, y: Int, width: Int, height: Int) : this(spritesheet, arrayOf(x), arrayOf(x), y, width, height)
