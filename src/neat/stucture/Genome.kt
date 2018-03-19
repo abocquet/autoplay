@@ -1,8 +1,9 @@
 package neat.stucture
 
 import neat.Config
+import java.io.Serializable
 
-data class Genome(val inputs: List<Node>, val hidden: List<Node>, val output: List<Node>, val connections: List<Connection>): Cloneable {
+data class Genome(val inputs: List<Node>, val hidden: List<Node>, val output: List<Node>, val connections: List<Connection>): Cloneable, Serializable {
     val nodes = inputs.plus(output).plus(hidden)
 
     init {

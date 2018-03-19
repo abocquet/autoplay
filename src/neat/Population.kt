@@ -2,29 +2,41 @@ package neat
 
 import neat.mutation.*
 import neat.stucture.Genome
+import java.io.Serializable
 import java.lang.Double.max
+import java.lang.Integer.max
 import java.lang.Integer.min
 import java.util.*
 
-class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double) {
+class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double): Serializable {
 
-    private val r = Random()
-    internal var population = Array(Config.pop_size, { Genome(inputs, outputs) })
-    private var generation = 0
+    // Initialisation
+    private var r = Random()
+    private var population = Array(Config.pop_size, { Genome(inputs, outputs) })
+    val members: List<Genome>
+        get() = population.asList()
+
     private var species = mutableListOf<Species>()
+    private var cache = FitnessCache(eval)
 
-    var cache = FitnessCache(eval)
+    var generation = 0
         private set
+
+    // Interfaces avec l'extrieur
+    val scores : List<Double>
+        get() = population.map { cache(it) }
 
     val results : String
         get() {
-            val cache = FitnessCache(eval)
             population.sortBy(cache::fitness)
             population.reverse()
             val best = population[0]
             return "$best has a score of ${cache.fitness(best)}"
         }
 
+    fun fitness(genome: Genome): Double { return cache(genome) }
+
+    // Méthodes utiles
     fun evolve(n: Int){ (0 until n).forEach { evolve() } }
 
     fun evolve(show: Boolean = false){
@@ -49,28 +61,26 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
             println()
         }
 
-        species.removeAll { it.stagnation > Config.max_stagnation }
+        species.removeAll { it.stagnation > Config.max_stagnation || it.members.size == 0 }
         val total = species.map(cache::fitness).sum()
         var offspring_count = 0
         val offspring = species.fold(listOf<Genome>()) { children, s ->
-            val n = ((cache.fitness(s) / total) * population.size).toInt()
-            val r = Random()
             val size = s.members.size
+            val n = (cache.fitness(s) * population.size / total).toInt()
+            val r = Random()
 
             s.members.sortBy(cache::fitness)
-            val eliteSize = min(Config.species_elitism, n)
+            val eliteSize = min(s.members.size, min(Config.species_elitism, n))
 
             offspring_count += n
 
-            children
-            .plus(s.members.take(eliteSize))
-            .plus(List(n - eliteSize, {
+            children.plus(s.members.take(eliteSize)).plus(List(n - eliteSize, {
                 val p1 = s.members[r.nextInt(size)]
                 val p2 = s.members[r.nextInt(size)]
                 if(cache(p1) > cache(p2)) crossover(p1, p2) else crossover(p2, p1)
             }))
-        }
-        .plus(List(Config.pop_size - offspring_count, {
+
+        }.plus(List(max(0, Config.pop_size - offspring_count), { // On complète avec des individus tirés au hasard
             val s = species[r.nextInt(species.size)]
             val size = s.members.size
 
@@ -82,8 +92,9 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
         .map(this::mutate)
         .sortedBy({ - cache(it) })
 
+
         val it = offspring.iterator()
-        for(i in Config.elitism until population.size){
+        for(i in Config.elitism until Config.pop_size){
             population[i] = it.next()
         }
 
@@ -147,5 +158,4 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
         get () {
             return population.map { FitnessCache(eval).fitness(it) }.max()!!
         }
-
 }

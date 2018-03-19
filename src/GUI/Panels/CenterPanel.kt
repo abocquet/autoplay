@@ -1,59 +1,93 @@
 package GUI.Panels
 
 import GUI.NumberField
+import GUI.annotations.FieldMutable
 import neat.Config
+import java.awt.CardLayout
 import java.awt.Color
 import java.awt.GridLayout
 import java.lang.Math.ceil
 import javax.swing.*
+import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.memberProperties
 
 class CenterPanel : JPanel(){
 
-    val UIConfName = JTextField("Nouvelle configuration")
-    val statPanel = StatPanel()
+    val uiConfName = JTextField("Nouvelle configuration")
+    val statPanel = PlotPanel()
 
-    val uiPlayButton = JButton("Lancer l'entrainement")
+    val cardContainer = JPanel(CardLayout())
 
+    val confCard = JPanel()
+    val uiStartButton = JButton("Lancer l'entrainement")
+    val uiTargetField = NumberField("Nombre de générations", number = 100.0, minimum = 1.0, maximum = 1_000.0, step = 10.0)
     val configPanel = JPanel()
-    val configLayout = GridLayout()
+
+    val runCard = JPanel()
+    val uiStopButton = JButton("Arreter")
+    val uiProgressBar = JProgressBar()
+    val uiProgressLabel = JLabel("Entrainement en cours")
 
     init {
-        UIConfName.font = UIConfName.font.deriveFont(20.0f)
+        // Partie commune
 
-        configPanel.layout = configLayout
+        uiConfName.font = uiConfName.font.deriveFont(20.0f)
+        layout = BoxLayout(this, BoxLayout.Y_AXIS)
 
-        val configReflexion = Config::class
+        add(uiConfName)
+        add(statPanel)
+        add(cardContainer)
 
-        configLayout.columns = 2
-        configLayout.rows = ceil(configReflexion.memberProperties.size / 2.0).toInt()
+        // Carte de configuration
 
+        val numberProperties = (Config::class).memberProperties
+            .filter { it.returnType.toString() == "kotlin.Int" || it.returnType.toString() == "kotlin.Double" }
+            .filter { it.annotations.any { it is FieldMutable } }
 
-        var i = 0
-        configReflexion.memberProperties.forEach {
+        configPanel.layout = GridLayout(
+                ceil(numberProperties.size / 2.0).toInt(), 2,
+                10, 0
+        )
 
-            if(it.returnType.toString() == "kotlin.Int" || it.returnType.toString() == "kotlin.Double") {
+        numberProperties.forEachIndexed { index, prop ->
 
-                val m = if (it.returnType == Int::class) 0.0 else -10.0
-                val M = if (it.returnType == Int::class) 100.0 else 10.0
-                val s = if (it.returnType == Int::class) 1.0 else .1
+            if(prop is KMutableProperty<*>) {
 
-                val field = NumberField(it.name, number = it.getter.call(Config).toString().toDouble(), minimum = m, maximum = M, step = s)
+                val annotation = prop.annotations.first { it is FieldMutable } as FieldMutable
 
-                if (i++ % 2 == 0) {
+                val field = NumberField(
+                        prop.name, number = prop.getter.call(Config).toString().toDouble(),
+                        minimum = annotation.min, maximum = annotation.max, step = annotation.step
+                ) { prop.setter.call(Config, it) }
+
+                if (index % 2 == 0) {
                     val blackline = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black)
                     field.border = blackline
                 }
 
-                configLayout.hgap = 10
                 configPanel.add(field)
             }
         }
 
-        layout = BoxLayout(this, BoxLayout.Y_AXIS)
-        add(UIConfName)
-        add(statPanel)
-        add(uiPlayButton)
-        add(configPanel)
+        val startPanel = JPanel()
+        startPanel.layout = BoxLayout(startPanel, BoxLayout.X_AXIS)
+        startPanel.add(uiTargetField)
+        startPanel.add(uiStartButton)
+
+        confCard.layout = BoxLayout(confCard, BoxLayout.Y_AXIS)
+        confCard.add(startPanel)
+        confCard.add(configPanel)
+
+        cardContainer.add(confCard, "CONFIGURE")
+
+        // Carte d'entrainement
+
+        runCard.layout = BoxLayout(runCard, BoxLayout.Y_AXIS)
+        runCard.add(uiStopButton)
+        runCard.add(uiProgressBar)
+        runCard.add(uiProgressLabel)
+
+        cardContainer.add(runCard, "TRAINING")
+
     }
 }

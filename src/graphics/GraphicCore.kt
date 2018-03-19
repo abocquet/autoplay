@@ -51,10 +51,14 @@ class GraphicCore(val level: Level, width: Int, height: Int): JFrame() {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         setLocationRelativeTo(null)
         contentPane = pan
-        isVisible = true
         isResizable = false
         requestFocus()
         focusTraversalKeysEnabled = false
+
+        toFront()
+
+        isVisible = true
+
     }
 
     fun start() {

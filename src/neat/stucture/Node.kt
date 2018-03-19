@@ -1,5 +1,6 @@
 package neat.stucture
 
+import java.io.Serializable
 import kotlin.math.exp
 
 
@@ -13,7 +14,7 @@ data class Node(
         val type: NodeType = NodeType.HIDDEN,
         val enabled: Boolean = true,
         val bias: Double = 0.0
-) {
+) : Serializable {
     val activation = fun(x: Double): Double { return 1 / (1 + exp(-x))}
 
     override fun toString(): String {

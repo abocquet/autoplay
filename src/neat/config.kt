@@ -1,80 +1,82 @@
 package neat
 
+import GUI.annotations.FieldMutable
+
 class ConfigC {
     //[NEAT]
-    val fitness_criterion     = "max"
-    val fitness_threshold     = 3.9
-    val pop_size              = 50
-    //val pop_size              = 100
-    val reset_on_extinction   = false
+    var fitness_criterion     = "max"
+    var fitness_threshold     = 3.9
+    var pop_size              = 50
+    //var pop_size              = 100
+    var reset_on_extinction   = false
 
     //[DefaultGenome]
     // node activation options
-    val activation_default      = "sigmoid"
-    val activation_mutate_rate  = 0.0
-    val activation_options      = "sigmoid"
+    var activation_default      = "sigmoid"
+    var activation_mutate_rate  = 0.0
+    var activation_options      = "sigmoid"
 
     // node aggregation options
-    val aggregation_default     = "sum"
-    val aggregation_mutate_rate = 0.0
-    val aggregation_options     = "sum"
+    var aggregation_default     = "sum"
+    var aggregation_mutate_rate = 0.0
+    var aggregation_options     = "sum"
 
     // node bias options
-    val bias_init_mean          = 0.0
-    val bias_init_stdev         = 1.0
-    val bias_max_value          = 30.0
-    val bias_min_value          = -30.0
-    val bias_mutate_power       = 0.5
-    val bias_mutate_rate        = 0.7
-    val bias_replace_rate       = 0.1
+    @FieldMutable(-50.0, 50.0, 0.1) var bias_init_mean          = 0.0
+    @FieldMutable(-50.0, 50.0, 0.1) var bias_init_stdev         = 1.0
+    @FieldMutable(-50.0, 50.0, 0.1) var bias_max_value          = 30.0
+    @FieldMutable(-50.0, 50.0, 0.1) var bias_min_value          = -30.0
+    @FieldMutable(-50.0, 50.0, 0.1) var bias_mutate_power       = 0.5
+    @FieldMutable(-50.0, 50.0, 0.1) var bias_mutate_rate        = 0.7
+    @FieldMutable(-50.0, 50.0, 0.1) var bias_replace_rate       = 0.1
 
     // genome compatibility options
-    val compatibility_disjoint_coefficient = 1.0
-    val compatibility_weight_coefficient   = 0.5
+    @FieldMutable(0.0, 1.0, 0.05) var compatibility_disjoint_coefficient = 1.0
+    @FieldMutable(0.0, 1.0, 0.05) var compatibility_weight_coefficient   = 0.5
 
     // connection add/remove rates
-    val conn_add_prob           = .1 //0.5
-    val conn_delete_prob        = .1 //0.5
+    @FieldMutable(0.0, 1.0, 0.05) var conn_add_prob           = .1 //0.5
+    @FieldMutable(0.0, 1.0, 0.05) var conn_delete_prob        = .1 //0.5
 
     // connection enable options
-    val enabled_default         = true
-    val enabled_mutate_rate     = 0.01
+    var enabled_default         = true
+    var enabled_mutate_rate     = 0.01
 
-    val initial_connection      = "full"
+    var initial_connection      = "full"
 
     // node add/remove rates
-    val node_add_prob           = 0.05 //0.2
-    val node_delete_prob        = 0.05 //0.2
+    @FieldMutable(0.0, 1.0, 0.05) var node_add_prob           = 0.05 //0.2
+    @FieldMutable(0.0, 1.0, 0.05) var node_delete_prob        = 0.05 //0.2
 
     // node response options
-    val response_init_mean      = 1.0
-    val response_init_stdev     = 0.0
-    val response_max_value      = 30.0
-    val response_min_value      = -30.0
-    val response_mutate_power   = 0.0
-    val response_mutate_rate    = 0.0
-    val response_replace_rate   = 0.0
+    var response_init_mean      = 1.0
+    var response_init_stdev     = 0.0
+    var response_max_value      = 30.0
+    var response_min_value      = -30.0
+    var response_mutate_power   = 0.0
+    var response_mutate_rate    = 0.0
+    var response_replace_rate   = 0.0
 
     // connection weight options
-    val weight_init_mean        = 0.0
-    val weight_init_stdev       = 1.0
-    val weight_max_value        = 30.0
-    val weight_min_value        = -30.0
-    val weight_mutate_power     = 0.5
-    val weight_mutate_rate      = 0.8
-    val weight_replace_rate     = 0.1
+    @FieldMutable(-50.0, 50.0, 0.1) var weight_init_mean        = 0.0
+    @FieldMutable(-50.0, 50.0, 0.1) var weight_init_stdev       = 1.0
+    @FieldMutable(-50.0, 50.0, 0.1) var weight_max_value        = 30.0
+    @FieldMutable(-50.0, 50.0, 0.1) var weight_min_value        = -30.0
+    @FieldMutable(-50.0, 50.0, 0.1) var weight_mutate_power     = 0.5
+    @FieldMutable(-50.0, 50.0, 0.1) var weight_mutate_rate      = 0.8
+    @FieldMutable(-50.0, 50.0, 0.1) var weight_replace_rate     = 0.1
 
     //[DefaultSpeciesSet]
-    val compatibility_threshold = 1.5 //3.0
+    @FieldMutable(0.0, 5.0, 0.1) var compatibility_threshold = 1.5 //3.0
 
     //[DefaultStagnation]
-    val species_fitness_func = "max"
-    val max_stagnation       = 20
-    val species_elitism      = 2
+    var species_fitness_func = "max"
+    @FieldMutable(10.0, 1000.0, 1.0) var max_stagnation       = 20
+    @FieldMutable(0.0, 10.0, 1.0) var species_elitism         = 2
 
     //[DefaultReproduction]
-    val elitism            = 2
-    val survival_threshold = 0.2
+    @FieldMutable(0.0, 10.0, 1.0) var elitism  = 2
+    var survival_threshold = 0.2
 }
 
 val Config = ConfigC()

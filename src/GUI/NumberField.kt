@@ -8,7 +8,7 @@ import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class NumberField(fieldName: String, var number: Double = 2.4, val minimum: Double = 0.0, val maximum: Double = 10.0, val step : Double = 1.0) : JPanel(), ActionListener, ChangeListener {
+class NumberField (fieldName: String, var number: Double = 2.4, val minimum: Double = 0.0, val maximum: Double = 10.0, val step: Double = 1.0, var onChange: (Double) -> Unit = {}) : JPanel(), ActionListener, ChangeListener {
 
     var value : Double
         get() = number
@@ -26,8 +26,6 @@ class NumberField(fieldName: String, var number: Double = 2.4, val minimum: Doub
     val UILabel = JLabel(fieldName)
     val uiText = JTextField(number.toString(), 5)
     val uiSlider = JSlider()
-
-    var listener: ActionListener? = null
 
     init {
         uiSlider.minimum = (minimum / step).toInt()
@@ -51,15 +49,11 @@ class NumberField(fieldName: String, var number: Double = 2.4, val minimum: Doub
 
     override fun actionPerformed(e: ActionEvent) {
         value = uiText.text.toDouble() * step
-        if (listener != null) {
-            listener!!.actionPerformed(ActionEvent(this, 1, "value_changed"))
-        }
+        this.onChange(value)
     }
 
     override fun stateChanged(e: ChangeEvent) {
         value = uiSlider.value * step
-        if (listener != null) {
-            listener!!.actionPerformed(ActionEvent(this, 1, "value_changed"))
-        }
+        this.onChange(value)
     }
 }

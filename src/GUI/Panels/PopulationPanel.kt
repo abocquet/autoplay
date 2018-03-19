@@ -7,7 +7,7 @@ import java.awt.Dimension
 import java.awt.Font
 import javax.swing.*
 
-class PopulationPanel(val population: Population) : JPanel() {
+class PopulationPanel(var population: Population) : JPanel() {
 
     init {
 
@@ -18,12 +18,12 @@ class PopulationPanel(val population: Population) : JPanel() {
 
     fun refresh(){
         removeAll()
-        population.population.forEachIndexed { index, genome ->
+        population.members.forEach { genome ->
             val genomePanel = JPanel()
-            val graphPanel = GraphPanel(genome)
+            val graphPanel = GenomePanel(genome)
             genomePanel.layout = BoxLayout(genomePanel, BoxLayout.Y_AXIS)
 
-            val uiTitle = JLabel("Fitness : ${population.cache.fitness(genome)}")
+            val uiTitle = JLabel("Fitness : ${population.fitness(genome)}")
             uiTitle.font = uiTitle.font.deriveFont(Font.BOLD)
             val uiPlayButton = JButton("Jouer")
 
@@ -36,15 +36,17 @@ class PopulationPanel(val population: Population) : JPanel() {
             genomePanel.add(graphPanel)
             genomePanel.add(subPanel)
 
-            graphPanel.scale = 150.0 / graphPanel.preferredSize.width
-
             genomePanel.preferredSize = subPanel.preferredSize + graphPanel.preferredSize
 
             val blackline = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black)
             genomePanel.border = blackline
 
             this.add(genomePanel)
+            genomePanel.repaint()
         }
+
+        validate()
+        repaint()
     }
 
 }

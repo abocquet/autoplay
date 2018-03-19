@@ -2,6 +2,7 @@ package GUI.Panels
 
 import neat.stucture.Connection
 import neat.stucture.Genome
+import physics.Vector
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Graphics
@@ -10,25 +11,22 @@ import java.awt.geom.AffineTransform
 import java.lang.Integer.max
 import javax.swing.JPanel
 
-class GraphPanel(val g: Genome) : JPanel() {
+class GenomePanel(val g: Genome) : JPanel() {
 
     val margin = 40
     val nodeDiameter = 30
-    var scale = 0.5
+    var scale = 1.0
 
-    var organization: Map<Int, Pair<Double, Double>>
+    var organization: Map<Int, Vector>
 
     override fun getPreferredSize(): Dimension {
-        if (isPreferredSizeSet) {
-            return super.getPreferredSize()
-        }
-
+        
         return organization
                 .map { it.value }
                 .fold(Dimension(0, 0)) { acc, value ->
                     Dimension(
-                            max(acc.width, (value.first * nodeDiameter * 10 * scale).toInt()),
-                            max(acc.height, (value.second * nodeDiameter * 10 * scale).toInt())
+                            max(acc.width, (value.x * nodeDiameter * 10 * scale).toInt()),
+                            max(acc.height, (value.y * nodeDiameter * 10 * scale).toInt())
                     )
                 }
     }
@@ -57,19 +55,19 @@ class GraphPanel(val g: Genome) : JPanel() {
             connectionsToExplore = newConnectionsToExplore
         }
 
-        val maxDistance = distanceCache.maxBy { it.value }!!.value
-        g.inputs.forEach { distanceCache[it.id] = maxDistance }
+        val maxDistance = distanceCache.map { it.value }.max()!!
+        g.inputs.forEach { distanceCache[it.id] = maxDistance + 1}
+        g.output.forEach { distanceCache[it.id] = 0 }
 
-        val countInColumn = Array(maxDistance + 1, { number -> distanceCache.count { it.value == number } })
-        val counter = Array(maxDistance + 1, { 1 })
+        val countInColumn = Array(maxDistance + 2, { number -> distanceCache.count { it.value == number } })
+        val counter = Array(maxDistance + 2, { 1 })
 
-        organization = distanceCache
-                .map {
-                    it.key to (
-                            1 - (distanceCache[it.key]!!.toDouble() / maxDistance) to
-                                    counter[distanceCache[it.key]!!]++.toDouble() / (countInColumn[distanceCache[it.key]!!] + 1)
-                            )
-                }.toMap()
+        organization = distanceCache.map {
+            it.key to Vector(
+                1 - (distanceCache[it.key]!!.toDouble() / (maxDistance+1)),
+                counter[distanceCache[it.key]!!]++.toDouble() / (countInColumn[distanceCache[it.key]!!] + 1)
+            )
+        }.toMap()
 
     }
 
@@ -103,8 +101,8 @@ class GraphPanel(val g: Genome) : JPanel() {
     }
 
     private fun positionOf(nodeId: Int): Pair<Int, Int> {
-        val x = (width - 2 * margin) * organization[nodeId]!!.first + margin / 2
-        val y = height * organization[nodeId]!!.second
+        val x = (width - 2 * margin) * organization[nodeId]!!.x + margin / 2
+        val y = height * organization[nodeId]!!.y
 
         return Pair(x.toInt(), y.toInt())
     }

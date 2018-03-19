@@ -1,10 +1,11 @@
 package neat
 
 import neat.stucture.Genome
+import java.io.Serializable
 import java.lang.Integer.max
 import kotlin.math.abs
 
-class Species(val representative: Genome, generation: Int) {
+class Species(val representative: Genome, generation: Int) : Serializable {
     val created = generation
     var last_improved = generation
         private set
