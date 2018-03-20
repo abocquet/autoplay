@@ -1,10 +1,38 @@
 package neat
 
+import neat.stucture.Connection
+import neat.stucture.Genome
+import neat.stucture.Node
+import neat.stucture.NodeType
 import kotlin.math.abs
 
 
-fun main(args: Array<String>){
+fun main(args: Array<String>) {
 
+    val g = Genome(
+        inputs= listOf(Node(id=-2, type= NodeType.INPUT, timeConstant = 1.0), Node(id=-1, type= NodeType.INPUT, timeConstant = 1.0)),
+        hidden= listOf(Node(id=78, type= NodeType.HIDDEN, timeConstant = 1.0)),
+        output= listOf(Node(id=0, type= NodeType.OUTPUT, timeConstant = 1.0)),
+        connections= listOf(
+                Connection(id=-1, weight=17.289520452941787, from=-1, to=0, enabled=true),
+                Connection(id=0, weight=27.004651430072762, from=-2, to=0, enabled=true),
+                Connection(id=180, weight=-18.721117259795925, from=78, to=0, enabled=true),
+                Connection(id=181, weight=8.795612279000192, from=-2, to=78, enabled=true),
+                Connection(id=198, weight=9.766505898431122, from=-1, to=78, enabled=true)
+                //Connection(id=208, weight=-4.168425678380614, from=78, to=78, enabled=true),
+                //Connection(id=561, weight=-8.227183506822566, from=0, to=78, enabled=true)
+        )
+    )
+
+    val network = CTRNN(g)
+    println(network.eval(arrayOf(0.0, 0.0), 10.0, 0.1)[0])
+    println(network.eval(arrayOf(0.0, 1.0), 10.0, 0.1)[0])
+    println(network.eval(arrayOf(1.0, 0.0), 10.0, 0.1)[0])
+    println(network.eval(arrayOf(1.0, 1.0), 10.0, 0.1)[0])
+
+}
+
+fun trainingTest() {
     val exam = arrayOf(
             Pair(arrayOf(0.0, 0.0), 0.0),
             Pair(arrayOf(1.0, 0.0), 1.0),

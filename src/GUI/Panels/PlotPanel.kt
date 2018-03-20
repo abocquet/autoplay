@@ -78,7 +78,9 @@ class PlotPanel : JPanel() {
             // Puis les plots
 
             plots.filter { it.X.count() > 0 }.forEach { plot ->
-                plot.X.zip(plot.Y).forEach {
+                val coords = plot.X.zip(plot.Y)
+
+                coords.forEach {
                     val x = it.first
                     val y = it.second
 
@@ -95,7 +97,7 @@ class PlotPanel : JPanel() {
                     return
                 }
 
-                plot.X.zip(plot.Y).zipWithNext().forEach {
+                coords.zipWithNext().forEach {
                     val x0 = it.first.first
                     val y0 = it.first.second
 
@@ -112,16 +114,29 @@ class PlotPanel : JPanel() {
                     )
                 }
             }
-        } catch (e: ConcurrentModificationException){ }
+        }
+        catch (e: ConcurrentModificationException){}
+        catch (e: NullPointerException) {}
+    }
+
+    fun clear(){
+        points.forEach { it.clear() }
+        repaint()
     }
 
 }
 
-data class Plot(val X: MutableList<Double>, val Y: MutableList<Double>, val label: String, val color: Color, val dotSize: Int, val linked: Boolean){
+data class Plot(val X: MutableList<Double>, val Y: MutableList<Double>, val label: String, val color: Color, val dotSize: Int, val linked: Boolean, val limit : Int = 1000){
 
+    @Synchronized
     fun add(x: Double, y: Double){
         X.add(x)
         Y.add(y)
+
+        while(X.max()!! - X.min()!! > limit){
+            X.removeAt(0)
+            Y.removeAt(0)
+        }
     }
 
     fun clear() {

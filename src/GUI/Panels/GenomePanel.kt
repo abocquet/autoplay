@@ -47,7 +47,10 @@ class GenomePanel(val g: Genome) : JPanel() {
             connectionsToExplore.forEach { c ->
                 exploredConnections.add(c)
 
-                g.connections.filter { it.to == c.from }.forEach {
+                g.connections
+                    .filter { it.to == c.from }
+                    .filter { g.nodes.first { n -> it.to == n.id }.enabled }
+                    .forEach {
                     distanceCache[it.from] = max(distanceCache[c.from]!! + 1, distanceCache[it.from] ?: 0)
                     g.connections.filter { it2 -> it2.to == it.from }
                 }
@@ -80,6 +83,7 @@ class GenomePanel(val g: Genome) : JPanel() {
         graphics.transform(transform)
 
         g.connections
+                .filter { it.enabled }
                 .filter { organization.containsKey(it.from) && organization.containsKey(it.to) }
                 .forEach { c ->
                     val p1 = positionOf(c.from)

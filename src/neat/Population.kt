@@ -9,7 +9,7 @@ import java.lang.Integer.min
 import java.util.*
 import kotlin.concurrent.thread
 
-class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double): Serializable {
+class Population(inputs: Int, outputs: Int, internal val eval: (Genome) -> Double): Serializable {
 
     // Initialisation
     val config = Config()
@@ -33,7 +33,7 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
             population.sortBy(cache::fitness)
             population.reverse()
             val best = population[0]
-            return "$best has a score of ${cache.fitness(best)}"
+            return "$best has a score of ${cache.fitness(best)} : \n ${best.connections}"
         }
 
     fun fitness(genome: Genome): Double { return cache(genome) }

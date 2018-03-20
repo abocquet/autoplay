@@ -23,7 +23,7 @@ class AddConnectionMutation(val config: Config) : MutationInterface {
         }
 
         if (g.connections.any { it.from == from.id && it.to == to.id }){
-            return g
+            return Genome(g.inputs, g.hidden, g.output, g.connections.map { if(it.from == from.id && it.to == to.id) { it.copy(enabled = true) } else { it } })
         }
 
         var weight = r.nextGaussian() * config.weight_init_stdev + config.weight_init_mean

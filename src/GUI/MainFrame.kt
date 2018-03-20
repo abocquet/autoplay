@@ -16,7 +16,6 @@ import javax.swing.*
 import javax.swing.filechooser.FileNameExtensionFilter
 import kotlin.concurrent.thread
 
-
 class MainFrame(var population: Population) : JFrame(), MouseListener {
 
     var centerPanel = CenterPanel(population)
@@ -33,13 +32,14 @@ class MainFrame(var population: Population) : JFrame(), MouseListener {
     val uiSaveItem = JMenuItem("Sauvegarder")
     val uiSaveUnderItem = JMenuItem("Sauvegarder sous...")
     val uiLoadItem = JMenuItem("Charger")
+    val uiResetItem = JMenuItem("Recommencer l'entrainement à zéro")
 
     var saveFile: String? = null
 
     init {
         // Initialisation de la fenetre
         title = "Autoplay"
-        size = Dimension(1400, 600)
+        size = Dimension(1600, 600)
 
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         setLocationRelativeTo(null)
@@ -70,10 +70,13 @@ class MainFrame(var population: Population) : JFrame(), MouseListener {
         uiFileMenu.add(uiSaveItem)
         uiFileMenu.add(uiSaveUnderItem)
         uiFileMenu.add(uiLoadItem)
+        uiFileMenu.addSeparator()
+        uiFileMenu.add(uiResetItem)
 
         uiSaveItem.addMouseListener(this)
         uiSaveUnderItem.addMouseListener(this)
         uiLoadItem.addMouseListener(this)
+        uiResetItem.addMouseListener(this)
 
         uiMenuBar.add(uiAppMenu)
         uiMenuBar.add(uiFileMenu)
@@ -101,6 +104,8 @@ class MainFrame(var population: Population) : JFrame(), MouseListener {
             uiSaveItem -> save()
             uiSaveUnderItem -> saveUnder()
             uiLoadItem -> load()
+            uiResetItem -> reset()
+
             else -> print(e.source)
         }
     }
@@ -134,6 +139,8 @@ class MainFrame(var population: Population) : JFrame(), MouseListener {
             (centerPanel.cardContainer.layout as CardLayout).next(centerPanel.cardContainer)
             popPanel.refresh()
             shouldStopTraining = false
+
+            println(population.results)
 
         }
     }
@@ -180,21 +187,35 @@ class MainFrame(var population: Population) : JFrame(), MouseListener {
                 when (loadedPop){
                     is Population -> {
                         population = loadedPop
-
                         centerPanel.uiConfName.text = uiFileChooser.selectedFile.nameWithoutExtension
-                        centerPanel.population = population
-                        centerPanel.repaintFields()
-
-                        popPanel.population = population
-                        popPanel.refresh()
-
-                        centerPanel.statPanel.points.forEach { it.clear() }
+                        clear()
                     }
                     else -> println("Failed to restore Population")
                 }
             }
         }
 
+    }
+
+    fun reset() {
+        shouldStopTraining = true
+        val option = JOptionPane.showConfirmDialog(this, "Voulez-vous recommencer avec une nouvelle population ?\nCela effacera toute évolution non sauvegardée", "Remise à zéro", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)
+
+        if (option == JOptionPane.OK_OPTION) {
+            population = Population(population.members[0].inputs.size, population.members[0].output.size, population.eval)
+            centerPanel.uiConfName.text = "Nouvelle configuration"
+            clear()
+        }
+    }
+
+    fun clear(){
+        centerPanel.population = population
+        centerPanel.repaintFields()
+
+        popPanel.population = population
+        popPanel.refresh()
+
+        centerPanel.statPanel.clear()
     }
 
     override fun mouseReleased(e: MouseEvent?) {}

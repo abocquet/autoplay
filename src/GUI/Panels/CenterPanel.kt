@@ -20,7 +20,7 @@ class CenterPanel(var population: Population) : JPanel(){
 
     val confCard = JPanel()
     val uiStartButton = JButton("Lancer l'entrainement")
-    val uiTargetField = NumberField("Nombre de générations", number = 100.0, minimum = 1.0, maximum = 1_000.0, step = 10.0)
+    val uiTargetField = NumberField("Nombre de générations", number = 100.0, minimum = 1.0, maximum = 10_000.0, step = 10.0)
     val configPanel = JPanel()
 
     val runCard = JPanel()
