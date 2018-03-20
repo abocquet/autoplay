@@ -10,6 +10,7 @@ import javax.swing.event.ChangeListener
 
 class NumberField (fieldName: String, var number: Double = 2.4, val minimum: Double = 0.0, val maximum: Double = 10.0, val step: Double = 1.0, var onChange: (Double) -> Unit = {}) : JPanel(), ActionListener, ChangeListener {
 
+
     var value : Double
         get() = number
         set(arg) {

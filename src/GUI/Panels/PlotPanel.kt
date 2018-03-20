@@ -37,80 +37,82 @@ class PlotPanel : JPanel() {
     @Synchronized
     override fun paint(g: Graphics) {
 
-        // On dessine les axes
+        try {
+            // On dessine les axes
 
-        g.drawLine(marginLeft, marginTop, marginLeft, height - marginBottom) // Ligne de droite
-        g.drawLine(marginLeft, height - marginBottom, width - marginRight, height - marginBottom) // Ligne du bas
+            g.drawLine(marginLeft, marginTop, marginLeft, height - marginBottom) // Ligne de droite
+            g.drawLine(marginLeft, height - marginBottom, width - marginRight, height - marginBottom) // Ligne du bas
 
-        // On met les valeurs min et max
+            // On met les valeurs min et max
 
-        val plots = points.filter { it.X.count() > 0 }
+            val plots = points.filter { it.X.count() > 0 }
 
-        if(plots.count() == 0){
-            return
-        }
-
-        val minX = plots.map({ it.X.min()!! }).min()!!
-        val maxX = plots.map({ it.X.max()!! }).max()!!
-
-        val minY = plots.map({ it.Y.min()!! }).min()!!
-        val maxY = plots.map({ it.Y.max()!! }).max()!!
-
-        g.drawString(minX.toString(), marginLeft, (height - marginBottom / 2.0).toInt())
-        g.drawString(maxX.toString(), width - marginRight, (height - marginBottom / 2.0).toInt())
-
-        g.drawString(((minY * 100).roundToInt()/100.0).toString(), 5, height - marginBottom)
-        g.drawString(((maxY * 100).roundToInt()/100.0).toString(), 5, marginTop)
-
-        // On affiche la légende
-
-        plots.forEachIndexed { index, plot ->
-            g.color = plot.color
-            g.drawLine(
-                    marginLeft * (2 + index), (height - marginBottom / 2.0 - 5).toInt(),
-                    marginLeft * (2 + index) + 10, (height - marginBottom / 2.0 - 5).toInt()
-            )
-            g.color = Color.BLACK
-            g.drawString(plot.label, marginLeft * (2 + index) + 15, (height - marginBottom / 2.0).toInt())
-        }
-
-        // Puis les plots
-
-        plots.filter { it.X.count() > 0 }.forEach { plot ->
-            plot.X.zip(plot.Y).forEach {
-                val x = it.first
-                val y = it.second
-
-                g.color = plot.color
-
-                g.fillOval(
-                    ((x - minX) / (maxX - minX) * (width - marginLeft - marginRight) + marginLeft).toInt(),
-                    height - ((y - minY) / (maxY - minY) * (height - marginLeft - marginRight) + marginLeft).toInt(),
-                    plot.dotSize, plot.dotSize
-                )
-            }
-
-            if(!plot.linked){
+            if (plots.count() == 0) {
                 return
             }
 
-            plot.X.zip(plot.Y).zipWithNext().forEach {
-                val x0 = it.first.first
-                val y0 = it.first.second
+            val minX = plots.map({ it.X.min()!! }).min()!!
+            val maxX = plots.map({ it.X.max()!! }).max()!!
 
-                val x1 = it.second.first
-                val y1 = it.second.second
+            val minY = plots.map({ it.Y.min()!! }).min()!!
+            val maxY = plots.map({ it.Y.max()!! }).max()!!
 
+            g.drawString(minX.toString(), marginLeft, (height - marginBottom / 2.0).toInt())
+            g.drawString(maxX.toString(), width - marginRight, (height - marginBottom / 2.0).toInt())
+
+            g.drawString(((minY * 100).roundToInt() / 100.0).toString(), 5, height - marginBottom)
+            g.drawString(((maxY * 100).roundToInt() / 100.0).toString(), 5, marginTop)
+
+            // On affiche la légende
+
+            plots.forEachIndexed { index, plot ->
                 g.color = plot.color
-
                 g.drawLine(
-                    ((x0 - minX) / (maxX - minX) * (width - marginLeft - marginRight) + marginLeft).toInt(),
-                    height - ((y0 - minY) / (maxY - minY) * (height - marginLeft - marginRight) + marginLeft).toInt(),
-                    ((x1 - minX) / (maxX - minX) * (width - marginLeft - marginRight) + marginLeft).toInt(),
-                    height - ((y1 - minY) / (maxY - minY) * (height - marginLeft - marginRight) + marginLeft).toInt()
+                        marginLeft * 2 * (1 + index), (height - marginBottom / 2.0 - 5).toInt(),
+                        marginLeft * 2 * (1 + index) + 10, (height - marginBottom / 2.0 - 5).toInt()
                 )
+                g.color = Color.BLACK
+                g.drawString(plot.label, marginLeft * 2 * (1 + index) + 15, (height - marginBottom / 2.0).toInt())
             }
-        }
+
+            // Puis les plots
+
+            plots.filter { it.X.count() > 0 }.forEach { plot ->
+                plot.X.zip(plot.Y).forEach {
+                    val x = it.first
+                    val y = it.second
+
+                    g.color = plot.color
+
+                    g.fillOval(
+                            ((x - minX) / (maxX - minX) * (width - marginLeft - marginRight) + marginLeft).toInt(),
+                            height - ((y - minY) / (maxY - minY) * (height - marginLeft - marginRight) + marginLeft).toInt(),
+                            plot.dotSize, plot.dotSize
+                    )
+                }
+
+                if (!plot.linked) {
+                    return
+                }
+
+                plot.X.zip(plot.Y).zipWithNext().forEach {
+                    val x0 = it.first.first
+                    val y0 = it.first.second
+
+                    val x1 = it.second.first
+                    val y1 = it.second.second
+
+                    g.color = plot.color
+
+                    g.drawLine(
+                            ((x0 - minX) / (maxX - minX) * (width - marginLeft - marginRight) + marginLeft).toInt(),
+                            height - ((y0 - minY) / (maxY - minY) * (height - marginLeft - marginRight) + marginLeft).toInt(),
+                            ((x1 - minX) / (maxX - minX) * (width - marginLeft - marginRight) + marginLeft).toInt(),
+                            height - ((y1 - minY) / (maxY - minY) * (height - marginLeft - marginRight) + marginLeft).toInt()
+                    )
+                }
+            }
+        } catch (e: ConcurrentModificationException){ }
     }
 
 }

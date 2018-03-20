@@ -7,7 +7,7 @@ import neat.stucture.Node
 import neat.stucture.NodeType
 import java.util.*
 
-class AddNodeMutation : MutationInterface {
+class AddNodeMutation(val config: Config) : MutationInterface {
 
     override operator fun invoke(g: Genome) : Genome {
         val r = Random()
@@ -21,9 +21,9 @@ class AddNodeMutation : MutationInterface {
         }
 
         val oldWeight : Double? = g.connections.firstOrNull { it.to == to.id && it.from == from.id }?.weight
-        var newWeight = r.nextGaussian() * Config.weight_init_stdev + Config.weight_init_mean
-        newWeight = Math.max(newWeight, Config.weight_min_value)
-        newWeight = Math.min(newWeight, Config.weight_max_value)
+        var newWeight = r.nextGaussian() * config.weight_init_stdev + config.weight_init_mean
+        newWeight = Math.max(newWeight, config.weight_min_value)
+        newWeight = Math.min(newWeight, config.weight_max_value)
 
         val new = Node(Node.innovation, 1.0, NodeType.HIDDEN)
         val hidden = g.hidden.plus(new)

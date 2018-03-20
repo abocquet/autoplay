@@ -2,7 +2,7 @@ package GUI.Panels
 
 import GUI.NumberField
 import GUI.annotations.FieldMutable
-import neat.Config
+import neat.Population
 import java.awt.CardLayout
 import java.awt.Color
 import java.awt.GridLayout
@@ -11,7 +11,7 @@ import javax.swing.*
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.memberProperties
 
-class CenterPanel : JPanel(){
+class CenterPanel(var population: Population) : JPanel(){
 
     val uiConfName = JTextField("Nouvelle configuration")
     val statPanel = PlotPanel()
@@ -39,35 +39,7 @@ class CenterPanel : JPanel(){
         add(cardContainer)
 
         // Carte de configuration
-
-        val numberProperties = (Config::class).memberProperties
-            .filter { it.returnType.toString() == "kotlin.Int" || it.returnType.toString() == "kotlin.Double" }
-            .filter { it.annotations.any { it is FieldMutable } }
-
-        configPanel.layout = GridLayout(
-                ceil(numberProperties.size / 2.0).toInt(), 2,
-                10, 0
-        )
-
-        numberProperties.forEachIndexed { index, prop ->
-
-            if(prop is KMutableProperty<*>) {
-
-                val annotation = prop.annotations.first { it is FieldMutable } as FieldMutable
-
-                val field = NumberField(
-                        prop.name, number = prop.getter.call(Config).toString().toDouble(),
-                        minimum = annotation.min, maximum = annotation.max, step = annotation.step
-                ) { prop.setter.call(Config, it) }
-
-                if (index % 2 == 0) {
-                    val blackline = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black)
-                    field.border = blackline
-                }
-
-                configPanel.add(field)
-            }
-        }
+        repaintFields()
 
         val startPanel = JPanel()
         startPanel.layout = BoxLayout(startPanel, BoxLayout.X_AXIS)
@@ -88,6 +60,45 @@ class CenterPanel : JPanel(){
         runCard.add(uiProgressLabel)
 
         cardContainer.add(runCard, "TRAINING")
+
+    }
+
+    fun repaintFields() {
+
+        configPanel.removeAll()
+
+        val numberProperties = (population.config::class).memberProperties
+                .filter { it.returnType.toString() == "kotlin.Int" || it.returnType.toString() == "kotlin.Double" }
+                .filter { it.annotations.any { it is FieldMutable } }
+
+        configPanel.layout = GridLayout(
+                ceil(numberProperties.size / 2.0).toInt(), 2,
+                10, 0
+        )
+
+        numberProperties.forEachIndexed { index, prop ->
+
+            if(prop is KMutableProperty<*>) {
+
+                val annotation = prop.annotations.first { it is FieldMutable } as FieldMutable
+
+                val field = NumberField(
+                        prop.name, number = prop.getter.call(population.config).toString().toDouble(),
+                        minimum = annotation.min, maximum = annotation.max, step = annotation.step
+                ) {
+                    prop.setter.call(population.config,
+                        if(prop.returnType.toString() == "kotlin.Int") { it.toInt() } else { it }
+                    )
+                }
+
+                if (index % 2 == 0) {
+                    val blackline = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black)
+                    field.border = blackline
+                }
+
+                configPanel.add(field)
+            }
+        }
 
     }
 }

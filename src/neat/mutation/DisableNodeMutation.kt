@@ -1,9 +1,10 @@
 package neat.mutation
 
+import neat.Config
 import neat.stucture.Genome
 import java.util.*
 
-class DisableNodeMutation : MutationInterface {
+class DisableNodeMutation(val config: Config) : MutationInterface {
 
     override operator fun invoke(g: Genome) : Genome {
         if(g.hidden.isEmpty()){

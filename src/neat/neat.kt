@@ -17,7 +17,7 @@ fun main(args: Array<String>){
         exam.map { 1 - (abs(nn.eval(it.first, 10.0, .1)[0] - it.second)) }.sum() - 0.01 * g.hidden.size
     })
 
-    while (population.score < Config.fitness_threshold) {
+    while (population.score < population.config.fitness_threshold) {
         population.evolve(100)
         population.evolve(true)
     }

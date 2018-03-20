@@ -6,7 +6,7 @@ import neat.stucture.Genome
 import neat.stucture.Node
 import java.util.*
 
-class AddConnectionMutation : MutationInterface {
+class AddConnectionMutation(val config: Config) : MutationInterface {
     override operator fun invoke(g: Genome) : Genome {
         if(g.hidden.isEmpty()){
             return g
@@ -26,9 +26,9 @@ class AddConnectionMutation : MutationInterface {
             return g
         }
 
-        var weight = r.nextGaussian() * Config.weight_init_stdev + Config.weight_init_mean
-        weight = Math.max(weight, Config.weight_min_value)
-        weight = Math.min(weight, Config.weight_max_value)
+        var weight = r.nextGaussian() * config.weight_init_stdev + config.weight_init_mean
+        weight = Math.max(weight, config.weight_min_value)
+        weight = Math.min(weight, config.weight_max_value)
 
         val connections: List<Connection> = g.connections.plus(Connection(Connection.innovation, weight, from.id, to.id, true))
 

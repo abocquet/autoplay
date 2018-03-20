@@ -30,7 +30,7 @@ class Species(val representative: Genome, generation: Int) : Serializable {
     }
 }
 
-class GenomeDistanceCache {
+class GenomeDistanceCache(val config: Config) {
 
     private val distances = mutableMapOf<Pair<Genome, Genome>, Double>()
 
@@ -59,7 +59,7 @@ class GenomeDistanceCache {
             }
 
             val maxNodes = max(g1.nodes.size, g2.nodes.size)
-            nodeDistance = (nodeDistance * Config.compatibility_weight_coefficient + Config.compatibility_disjoint_coefficient * disjointNodes) / maxNodes
+            nodeDistance = (nodeDistance * config.compatibility_weight_coefficient + config.compatibility_disjoint_coefficient * disjointNodes) / maxNodes
 
             //Compute connection gene difference
             var connectionDistance = 0.0
@@ -82,7 +82,7 @@ class GenomeDistanceCache {
             }
 
             val maxConn = max(g1.connections.size, g2.connections.size)
-            connectionDistance = (connectionDistance + (Config.compatibility_disjoint_coefficient * disjointConnections)) / maxConn
+            connectionDistance = (connectionDistance + (config.compatibility_disjoint_coefficient * disjointConnections)) / maxConn
 
             distance = nodeDistance + connectionDistance
             distances[Pair(g1, g2)] = distance

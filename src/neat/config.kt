@@ -1,8 +1,9 @@
 package neat
 
 import GUI.annotations.FieldMutable
+import java.io.Serializable
 
-class ConfigC {
+class Config : Serializable {
     //[NEAT]
     var fitness_criterion     = "max"
     var fitness_threshold     = 3.9
@@ -78,5 +79,3 @@ class ConfigC {
     @FieldMutable(0.0, 10.0, 1.0) var elitism  = 2
     var survival_threshold = 0.2
 }
-
-val Config = ConfigC()

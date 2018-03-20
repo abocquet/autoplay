@@ -7,12 +7,14 @@ import java.lang.Double.max
 import java.lang.Integer.max
 import java.lang.Integer.min
 import java.util.*
+import kotlin.concurrent.thread
 
 class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double): Serializable {
 
     // Initialisation
+    val config = Config()
     private var r = Random()
-    private var population = Array(Config.pop_size, { Genome(inputs, outputs) })
+    private var population = Array(config.pop_size, { Genome(inputs, outputs, config) })
     val members: List<Genome>
         get() = population.asList()
 
@@ -39,14 +41,39 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
     // Méthodes utiles
     fun evolve(n: Int){ (0 until n).forEach { evolve() } }
 
-    fun evolve(show: Boolean = false){
+    fun evolve(show: Boolean = false, async: Boolean = true){
         generation++
-        cache = FitnessCache(eval)
+
+        if (async) {
+            // On calcule les fitness aurapavant
+            cache = FitnessCache(eval)
+            val cores = Runtime.getRuntime().availableProcessors()
+            val ps = population.size
+
+            val threads = mutableListOf<Thread>()
+            val caches = mutableListOf<FitnessCache>()
+
+            for (i in 0 until cores) {
+                threads.add(thread {
+                    val cache = FitnessCache(eval)
+                    val range = if (i == cores - 1) {
+                        ps * i / cores until ps
+                    } else {
+                        ps * i / cores until ps * (i + 1) / cores
+                    }
+                    population.sliceArray(range).forEach { cache.fitness(it) }
+                    caches.add(cache)
+                })
+            }
+
+            threads.forEach { it.join() }
+            caches.forEach { it.share(cache) }
+        }
 
         population.sortBy { - cache.fitness(it) }
         val newPop = Array<Genome?>(population.size, { null })
 
-        for(i in 0 until Config.elitism){
+        for(i in 0 until config.elitism){
             newPop[i] = population[i]
         }
 
@@ -61,7 +88,11 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
             println()
         }
 
-        species.removeAll { it.stagnation > Config.max_stagnation || it.members.size == 0 }
+        species.removeAll { it.stagnation > config.max_stagnation || it.members.size == 0 }
+        if(species.size == 0){
+            return
+        }
+
         val total = species.map(cache::fitness).sum()
         var offspring_count = 0
         val offspring = species.fold(listOf<Genome>()) { children, s ->
@@ -70,7 +101,7 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
             val r = Random()
 
             s.members.sortBy(cache::fitness)
-            val eliteSize = min(s.members.size, min(Config.species_elitism, n))
+            val eliteSize = min(s.members.size, min(config.species_elitism, n))
 
             offspring_count += n
 
@@ -80,7 +111,7 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
                 if(cache(p1) > cache(p2)) crossover(p1, p2) else crossover(p2, p1)
             }))
 
-        }.plus(List(max(0, Config.pop_size - offspring_count), { // On complète avec des individus tirés au hasard
+        }.plus(List(max(0, config.pop_size - offspring_count), { // On complète avec des individus tirés au hasard
             val s = species[r.nextInt(species.size)]
             val size = s.members.size
 
@@ -94,7 +125,7 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
 
 
         val it = offspring.iterator()
-        for(i in Config.elitism until Config.pop_size){
+        for(i in config.elitism until config.pop_size){
             population[i] = it.next()
         }
 
@@ -104,25 +135,25 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
     private fun mutate(_p: Genome) : Genome {
         var p = _p
 
-        val div1 = max(1.0, Config.weight_replace_rate + Config.weight_mutate_rate + Config.bias_replace_rate + Config.bias_mutate_rate)
+        val div1 = max(1.0, config.weight_replace_rate + config.weight_mutate_rate + config.bias_replace_rate + config.bias_mutate_rate)
         val nd1 = r.nextDouble()
 
         p = when {
-            nd1 < (Config.weight_replace_rate) / div1 -> ReplaceConnectionWeightMutation()(p)
-            nd1 < (Config.weight_replace_rate + Config.weight_mutate_rate) / div1 -> MutateConnectionWeightMutation()(p)
-            nd1 < (Config.weight_replace_rate + Config.weight_mutate_rate + Config.bias_replace_rate) / div1 -> ReplaceBiasMutation()(p)
-            nd1 < (Config.weight_replace_rate + Config.weight_mutate_rate + Config.bias_replace_rate + Config.bias_mutate_rate) / div1 -> MutateBiasMutation()(p)
+            nd1 < (config.weight_replace_rate) / div1 -> ReplaceConnectionWeightMutation(config)(p)
+            nd1 < (config.weight_replace_rate + config.weight_mutate_rate) / div1 -> MutateConnectionWeightMutation(config)(p)
+            nd1 < (config.weight_replace_rate + config.weight_mutate_rate + config.bias_replace_rate) / div1 -> ReplaceBiasMutation(config)(p)
+            nd1 < (config.weight_replace_rate + config.weight_mutate_rate + config.bias_replace_rate + config.bias_mutate_rate) / div1 -> MutateBiasMutation(config)(p)
             else -> p
         }
 
-        val div2 = max(1.0, Config.conn_add_prob + Config.conn_delete_prob + Config.node_add_prob + Config.node_delete_prob)
+        val div2 = max(1.0, config.conn_add_prob + config.conn_delete_prob + config.node_add_prob + config.node_delete_prob)
         val nd2 = r.nextDouble()
 
         p =  when {
-            nd2 < (Config.conn_add_prob) / div2 -> AddConnectionMutation()(p)
-            nd2 < (Config.conn_add_prob + Config.conn_delete_prob) / div2 -> RemoveConnectionMutation()(p)
-            nd2 < (Config.conn_add_prob + Config.conn_delete_prob + Config.node_add_prob ) / div2 -> AddNodeMutation()(p)
-            nd2 < (Config.conn_add_prob + Config.conn_delete_prob + Config.node_add_prob + Config.node_delete_prob) / div2 -> DisableNodeMutation()(p)
+            nd2 < (config.conn_add_prob) / div2 -> AddConnectionMutation(config)(p)
+            nd2 < (config.conn_add_prob + config.conn_delete_prob) / div2 -> RemoveConnectionMutation(config)(p)
+            nd2 < (config.conn_add_prob + config.conn_delete_prob + config.node_add_prob ) / div2 -> AddNodeMutation(config)(p)
+            nd2 < (config.conn_add_prob + config.conn_delete_prob + config.node_add_prob + config.node_delete_prob) / div2 -> DisableNodeMutation(config)(p)
             else -> p
         }
 
@@ -131,13 +162,13 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
 
     private fun speciate() {
 
-        val distance = GenomeDistanceCache()
+        val distance = GenomeDistanceCache(config)
         species.forEach { it.members.clear() }
         population.forEach { g ->
 
             var flag = false
             for(s in species){
-                if(distance(s.representative, g) < Config.compatibility_threshold){
+                if(distance(s.representative, g) < config.compatibility_threshold){
                     s.members.add(g)
                     s.addFitness(cache(g))
                     flag = true
@@ -150,8 +181,7 @@ class Population(inputs: Int, outputs: Int, private val eval: (Genome) -> Double
             }
         }
 
-        species.removeAll { it.members.size == 0 }
-        species.forEach { assert(it.members.size > 0) }
+        species.removeAll { it.members.isEmpty() }
     }
 
     val score: Double

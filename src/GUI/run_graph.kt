@@ -2,6 +2,7 @@ package GUI
 
 import GUI.Panels.GenomePanel
 import GUI.Panels.PlotPanel
+import neat.Config
 import neat.Population
 import neat.stucture.Connection
 import neat.stucture.Genome
@@ -41,7 +42,7 @@ fun genomeTest() {
 }
 
 fun sampleGenome(): Genome {
-    val genome = Genome(3, 2)
+    val genome = Genome(3, 2, Config())
 
     val inputs = listOf(
             Node(-3, 1.0, NodeType.INPUT),

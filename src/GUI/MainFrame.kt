@@ -17,12 +17,9 @@ import javax.swing.filechooser.FileNameExtensionFilter
 import kotlin.concurrent.thread
 
 
-
-
-
 class MainFrame(var population: Population) : JFrame(), MouseListener {
 
-    val centerPanel = CenterPanel()
+    var centerPanel = CenterPanel(population)
     val popPanel = PopulationPanel(population)
 
     var trainThread : Thread? = null
@@ -145,6 +142,7 @@ class MainFrame(var population: Population) : JFrame(), MouseListener {
 
         if(saveFile != null){
 
+            println("en sortie: ${population.config.elitism}")
             val fos = FileOutputStream(saveFile)
             val oos = ObjectOutputStream(fos)
 
@@ -177,15 +175,19 @@ class MainFrame(var population: Population) : JFrame(), MouseListener {
 
         if (uiFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             ObjectInputStream(FileInputStream(uiFileChooser.selectedFile)).use { it ->
-                val population = it.readObject()
+                val loadedPop = it.readObject()
 
-                when (population){
+                when (loadedPop){
                     is Population -> {
-                        centerPanel.uiConfName.text = uiFileChooser.selectedFile.nameWithoutExtension
+                        population = loadedPop
 
-                        this.population = population
-                        popPanel.population = this.population
+                        centerPanel.uiConfName.text = uiFileChooser.selectedFile.nameWithoutExtension
+                        centerPanel.population = population
+                        centerPanel.repaintFields()
+
+                        popPanel.population = population
                         popPanel.refresh()
+
                         centerPanel.statPanel.points.forEach { it.clear() }
                     }
                     else -> println("Failed to restore Population")

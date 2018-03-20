@@ -16,14 +16,14 @@ data class Genome(val inputs: List<Node>, val hidden: List<Node>, val output: Li
     }
 }
 
-fun Genome(n_inputs: Int, n_outputs: Int): Genome {
+fun Genome(n_inputs: Int, n_outputs: Int, config: Config): Genome {
 
     var nid = -n_inputs
-    val inputs = List(n_inputs, { Node(nid++, Config.bias_init_mean, NodeType.INPUT) })
+    val inputs = List(n_inputs, { Node(nid++, config.bias_init_mean, NodeType.INPUT) })
     val outputs = List(n_outputs, { Node(nid++, 1.0, NodeType.OUTPUT) })
 
     val connections = mutableListOf<Connection>()
-    if(Config.initial_connection == "full") {
+    if(config.initial_connection == "full") {
         var cid = - n_outputs
         for(i in 1..n_inputs){
             for(j in 0 until n_outputs) {

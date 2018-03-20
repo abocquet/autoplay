@@ -9,7 +9,7 @@ class FitnessCache(private val eval: (Genome) -> Double) : Serializable{
     operator fun invoke(g: Genome): Double { return fitness(g) }
 
     fun fitness(g: Genome): Double {
-        if(!cache.containsKey(g)){
+        if(!cache.containsKey(g) || cache[g] == null){
             cache[g] = eval(g)
         }
 
@@ -22,6 +22,10 @@ class FitnessCache(private val eval: (Genome) -> Double) : Serializable{
 
     fun add(l: List<Genome>){
         l.forEach { fitness(it) }
+    }
+
+    fun share(other: FitnessCache){
+        other.cache.putAll(this.cache)
     }
 
 }
