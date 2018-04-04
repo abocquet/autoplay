@@ -4,7 +4,7 @@ import neat.Config
 import neat.stucture.Genome
 import java.util.*
 
-class MutateConnectionWeightMutation(val config: Config) : MutationInterface {
+class ReplaceWeightMutation(val config: Config) : MutationInterface {
     override operator fun invoke(g: Genome): Genome {
 
         val r = Random()
@@ -15,7 +15,7 @@ class MutateConnectionWeightMutation(val config: Config) : MutationInterface {
         weight = Math.min(weight, config.bias_max_value)
 
         return g.copy(connections = g.connections.map {
-            if(it.id == connection.id){ it.copy(weight = it.weight + weight) } else { it }
+            if(it.id == connection.id){ it.copy(weight = weight) } else { it }
         })
 
     }

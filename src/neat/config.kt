@@ -7,7 +7,7 @@ class Config : Serializable {
     //[NEAT]
     var fitness_criterion     = "max"
     var fitness_threshold     = 3.9
-    var pop_size              = 50
+    var pop_size              = 100
     //var pop_size              = 100
     var reset_on_extinction   = false
 

@@ -34,17 +34,19 @@ class Population(inputs: Int, outputs: Int, internal val eval: (Genome) -> Doubl
             population.reverse()
             val best = population[0]
             return "$best has a score of ${cache.fitness(best)} : \n ${best.connections}"
+            return "$best has a score of ${cache.fitness(best)} : \n ${best.connections}"
         }
 
     fun fitness(genome: Genome): Double { return cache(genome) }
 
     // Méthodes utiles
-    fun evolve(n: Int){ (0 until n).forEach { evolve() } }
+    fun evolve(n: Int, async: Boolean = true){ (0 until n).forEach { evolve(async = async) } }
 
     fun evolve(show: Boolean = false, async: Boolean = true){
         generation++
 
         if (async) {
+
             // On calcule les fitness aurapavant
             cache = FitnessCache(eval)
             val cores = Runtime.getRuntime().availableProcessors()
@@ -82,9 +84,9 @@ class Population(inputs: Int, outputs: Int, internal val eval: (Genome) -> Doubl
 
         if(show){
             println("best: ${cache(population[0])} (${population[0].hidden.size}) - worst : ${cache(population[population.size - 1])} (${population[population.size - 1].hidden.size})")
-            println(species.map { "${it.members.size} " })
-            println(population.map { "${it.hidden.size} " })
-            println(species.map{ "${it.stagnation}" })
+            print("members    : ") ; println(species.map { "${it.members.size} " })
+            print("hidden     : ") ; println(population.map { "${it.hidden.size} " })
+            print("stagnation : ") ; println(species.map{ "${it.stagnation}" })
             println()
         }
 
@@ -139,10 +141,10 @@ class Population(inputs: Int, outputs: Int, internal val eval: (Genome) -> Doubl
         val nd1 = r.nextDouble()
 
         p = when {
-            nd1 < (config.weight_replace_rate) / div1 -> ReplaceConnectionWeightMutation(config)(p)
-            nd1 < (config.weight_replace_rate + config.weight_mutate_rate) / div1 -> MutateConnectionWeightMutation(config)(p)
+            nd1 < (config.weight_replace_rate) / div1 -> ReplaceWeightMutation(config)(p)
+            nd1 < (config.weight_replace_rate + config.weight_mutate_rate) / div1 -> EditWeightMutation(config)(p)
             nd1 < (config.weight_replace_rate + config.weight_mutate_rate + config.bias_replace_rate) / div1 -> ReplaceBiasMutation(config)(p)
-            nd1 < (config.weight_replace_rate + config.weight_mutate_rate + config.bias_replace_rate + config.bias_mutate_rate) / div1 -> MutateBiasMutation(config)(p)
+            nd1 < (config.weight_replace_rate + config.weight_mutate_rate + config.bias_replace_rate + config.bias_mutate_rate) / div1 -> EditBiasMutation(config)(p)
             else -> p
         }
 
@@ -150,7 +152,7 @@ class Population(inputs: Int, outputs: Int, internal val eval: (Genome) -> Doubl
         val nd2 = r.nextDouble()
 
         p =  when {
-            nd2 < (config.conn_add_prob) / div2 -> AddConnectionMutation(config)(p)
+            nd2 < (config.conn_add_prob) / div2 -> AddConnectionMutationFF(config)(p)
             nd2 < (config.conn_add_prob + config.conn_delete_prob) / div2 -> RemoveConnectionMutation(config)(p)
             nd2 < (config.conn_add_prob + config.conn_delete_prob + config.node_add_prob ) / div2 -> AddNodeMutation(config)(p)
             nd2 < (config.conn_add_prob + config.conn_delete_prob + config.node_add_prob + config.node_delete_prob) / div2 -> DisableNodeMutation(config)(p)

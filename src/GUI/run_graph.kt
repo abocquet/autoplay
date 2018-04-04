@@ -37,7 +37,7 @@ fun genomeTest() {
     population.evolve(10)
     val genome = population.members[3]
 
-    val panel = GenomePanel(sampleGenome2())
+    val panel = GenomePanel(sampleGenome())
     val app = SimpleFrame(panel)
 }
 

@@ -5,7 +5,7 @@ import level.Level
 import models.Bloc
 import physics.PhysicCore
 
-class PeopleController(level: Level, graphics: GraphicCore, physicCore: PhysicCore) : AbstractControler(level, graphics, physicCore) {
+class PeopleController(level: Level, graphics: GraphicCore, physicCore: PhysicCore) : AbstractController(level, graphics, physicCore) {
 
     init {
         physicCore.listeners.add({

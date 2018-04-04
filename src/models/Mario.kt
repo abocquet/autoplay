@@ -37,10 +37,9 @@ class Mario(x: Double, y: Double) : People(
 
             field = value
 
-            if(life == 1){
-                this.dimension.height = 40
-            } else {
-                this.dimension.height = 80
+            this.dimension.height = when (life) {
+                1 ->  40
+                else ->  80
             }
         }
 }

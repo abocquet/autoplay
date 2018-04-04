@@ -1,6 +1,5 @@
 package physics
 
-import bot.AbstractBot
 import level.Level
 import models.AbstractObject
 import kotlin.concurrent.thread
@@ -27,16 +26,6 @@ class PhysicCore(val level: Level) {
         shouldRun = true
         thread {
             while (shouldRun) {
-
-                val objects = level.objects.toList()
-
-                for (p in level.objects) {
-                    if (p is AbstractBot) {
-                        p.update(1.0 / framerate.toDouble(), objects, level)
-                    } else {
-                        p.update(1.0 / framerate.toDouble(), objects)
-                    }
-                }
 
                 listeners.forEach { it(1.0 / framerate.toDouble()) }
 

@@ -6,7 +6,7 @@ import neat.stucture.Genome
 import neat.stucture.Node
 import java.util.*
 
-class AddConnectionMutation(val config: Config) : MutationInterface {
+class AddConnectionMutationCTRNN(val config: Config) : MutationInterface {
     override operator fun invoke(g: Genome) : Genome {
         if(g.hidden.isEmpty()){
             return g
@@ -15,8 +15,7 @@ class AddConnectionMutation(val config: Config) : MutationInterface {
         val r = Random()
 
         val from = g.nodes[r.nextInt(g.nodes.size)]
-        val to: Node?
-        to = if(r.nextDouble() < g.output.size / (g.output.size + g.hidden.size)){
+        val to = if(r.nextDouble() < g.output.size / (g.output.size + g.hidden.size)){
             g.output[r.nextInt(g.output.size)]
         } else {
             g.hidden[r.nextInt(g.hidden.size)]

@@ -17,7 +17,7 @@ class FitnessCache(private val eval: (Genome) -> Double) : Serializable{
     }
 
     fun fitness(s: Species): Double{
-        return s.members.map(this::fitness).sum() / s.members.size
+        return s.members.map(this::fitness).average()
     }
 
     fun add(l: List<Genome>){

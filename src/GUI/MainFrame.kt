@@ -57,7 +57,6 @@ class MainFrame(var population: Population) : JFrame(), MouseListener {
         val uiMenuBar = JMenuBar()
         jMenuBar = uiMenuBar
 
-
         // premier menu
         uiAppMenu.add(uiPlayMenuItem)
         uiAppMenu.addSeparator()

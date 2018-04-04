@@ -13,14 +13,14 @@ class AddNodeMutation(val config: Config) : MutationInterface {
         val r = Random()
 
         val from = g.nodes[r.nextInt(g.nodes.size)]
-        val to: Node?
-        to = if(r.nextDouble() < g.output.size / (g.output.size + g.hidden.size)){
+        val to = if(r.nextDouble() < g.output.size / (g.output.size + g.hidden.size)){
             g.output[r.nextInt(g.output.size)]
         } else {
             g.hidden[r.nextInt(g.hidden.size)]
         }
 
         val oldWeight : Double? = g.connections.firstOrNull { it.to == to.id && it.from == from.id }?.weight
+
         var newWeight = r.nextGaussian() * config.weight_init_stdev + config.weight_init_mean
         newWeight = Math.max(newWeight, config.weight_min_value)
         newWeight = Math.min(newWeight, config.weight_max_value)

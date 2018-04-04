@@ -1,4 +1,4 @@
-package neat
+package neat.neural
 
 import neat.stucture.Genome
 import neat.stucture.Node
@@ -10,7 +10,7 @@ class GraphNode(
         var value: Double = 0.0
 )
 
-class CTRNN(private val genome: Genome) {
+class CTRNN(private val genome: Genome, var final_time: Double, var time_step: Double) : NeuralNetwork {
 
     private val nodes = genome.nodes.map { GraphNode(it, mutableListOf()) }
 
@@ -26,7 +26,7 @@ class CTRNN(private val genome: Genome) {
 
     }
 
-    fun eval(input_values: Array<Double>, final_time: Double, time_step: Double) : Array<Double> {
+    override fun eval(input_values: Array<Double>) : Array<Double> {
         /* Advance the simulation by the given amount of time, assuming that input_nodes are
         constant at the given values during the simulated time. */
         var time_seconds = 0.0

@@ -6,6 +6,8 @@ import bot.ennemies.times
 import bot.items.CoinItem
 import bot.items.FlowerItem
 import bot.items.MushroomItem
+import controllers.AudioController
+import controllers.BotController
 import controllers.HeroController
 import controllers.PeopleController
 import graphics.GraphicCore
@@ -143,8 +145,10 @@ class LevelLoader {
         val graphics = GraphicCore(level, width*maille, height*maille)
         val physics = PhysicCore(level)
 
-        val heroController = HeroController(level, graphics, physics)
-        val personnagesController = PeopleController(level, graphics, physics)
+        HeroController(level, graphics, physics)
+        PeopleController(level, graphics, physics)
+        BotController(level, graphics, physics)
+        AudioController(level, graphics, physics)
 
         graphics.start()
         physics.start()

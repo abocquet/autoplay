@@ -4,7 +4,7 @@ import neat.Config
 import neat.stucture.Genome
 import java.util.*
 
-class MutateBiasMutation(val config: Config) : MutationInterface {
+class EditBiasMutation(val config: Config) : MutationInterface {
     override fun invoke(g: Genome): Genome {
 
         val r = Random()
@@ -15,15 +15,15 @@ class MutateBiasMutation(val config: Config) : MutationInterface {
             g.hidden[r.nextInt(g.hidden.size)]
         }
 
-        var bias = r.nextGaussian() * config.bias_init_stdev + config.bias_init_mean
+        var bias = r.nextGaussian() * config.bias_mutate_power
         bias = Math.max(bias, config.bias_min_value)
         bias = Math.min(bias, config.bias_max_value)
 
         return Genome(
-            g.inputs,
-            g.hidden.map { if(it == to) to.copy(bias = bias + it.bias) else it },
-            g.output.map { if(it == to) to.copy(bias = bias + it.bias) else it },
-            g.connections
+                g.inputs,
+                g.hidden.map { if(it == to) to.copy(bias = bias + it.bias) else it },
+                g.output.map { if(it == to) to.copy(bias = bias + it.bias) else it },
+                g.connections
         )
     }
 

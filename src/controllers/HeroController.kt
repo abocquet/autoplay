@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import kotlin.math.abs
 
-class HeroController(val level: Level, graphics: GraphicCore, physicCore: PhysicCore) : AbstractControler(level, graphics, physicCore), KeyListener {
+class HeroController(val level: Level, graphics: GraphicCore, physicCore: PhysicCore) : AbstractController(level, graphics, physicCore), KeyListener {
 
     private var targeting: People? = null
 
